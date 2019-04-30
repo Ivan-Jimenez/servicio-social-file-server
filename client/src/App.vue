@@ -8,6 +8,7 @@
         </v-container>
       </main>
     </v-app>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
   </div>
 </template>
 

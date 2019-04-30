@@ -3,7 +3,7 @@
     <v-flex>
       <v-flex xs6 offset-xs3>
         <div class="elevation-2">
-          <v-toolbar flat dense>
+          <v-toolbar class="cyan darken-2" flat dense dark>
             <v-toolbar-title>Nuevo Usuario</v-toolbar-title>
           </v-toolbar>
           <div class="pl-4 pr-4 pt-2 pb-2">

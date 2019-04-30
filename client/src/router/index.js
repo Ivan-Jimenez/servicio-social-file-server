@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Register from '@/components/register'
+import NewSocialService from '@/components/NewSocialService'
 
 Vue.use(Router)
 
@@ -19,9 +20,14 @@ export default new Router({
       component: Login
     },
     {
-      path: '/new-user',
+      path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/social-service',
+      name: 'social-service',
+      component: NewSocialService
     }
   ]
 })
