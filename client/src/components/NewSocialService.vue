@@ -40,7 +40,7 @@
             <ul class="files">
               <li v-for="(file, index) in files" :key="file">
                 <v-btn small flat color="error" @click="removeFile(index)">
-                  x
+                  <v-icon center dark>delete</v-icon>
                 </v-btn>
                 {{ file.name }}
               </li>

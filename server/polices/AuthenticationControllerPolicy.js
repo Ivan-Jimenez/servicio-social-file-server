@@ -12,28 +12,31 @@ module.exports = {
     }
     const {error, value} = Joi.validate(req.body, schema)
     if (error) {
-      switch (error.details[0].context.key) {
-        case 'name':
-          res.status(400).send({
-            error: 'El nombre no puede estar vacío.'
-          })
-          break
-        case 'lastName':
-          res.status(400).send({
-            erro: 'El apellido no puede estar vacío'
-          })
-          break
-        case 'email':
-          res.status(400).send({
-            error: 'Ingrese una cuenta de email válida.'
-          })
-        case 'password':
-          res.status(400).send({
-            error: `La contraseña debe tener minímo 8 y máximo 32 caracteres. 
-              Letras y numeros`
-          })
-          break
-      }
+      res.status(400).send({
+        error: 'Verifique los datos.'
+      })
+      // switch (error.details[0].context.key) {
+      //   case 'name':
+      //     res.status(400).send({
+      //       error: 'El nombre no puede estar vacío.'
+      //     })
+      //     break
+      //   case 'lastName':
+      //     res.status(400).send({
+      //       erro: 'El apellido no puede estar vacío'
+      //     })
+      //     break
+      //   case 'email':
+      //     res.status(400).send({
+      //       error: 'Ingrese una cuenta de email válida.'
+      //     })
+      //   case 'password':
+      //     res.status(400).send({
+      //       error: `La contraseña debe tener minímo 8 y máximo 32 caracteres. 
+      //         Letras y numeros`
+      //     })
+      //     break
+      // }
     } else {
       next()
     }

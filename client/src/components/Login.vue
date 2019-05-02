@@ -1,12 +1,23 @@
 <template>
-  <v-layout column>
+  <v-layout
+    column>
     <v-flex>
-      <v-flex xs6 offset-xs3>
-        <div class="elevation-2">
-          <v-toolbar class="cyan darken-2" flat dense dark>
-            <v-toolbar-title>Entrar</v-toolbar-title>
+      <v-flex
+        xs6
+        offset-xs3>
+        <div
+          class="elevation-2">
+          <v-toolbar
+            class="cyan darken-2"
+            flat
+            dense
+            dark>
+            <v-toolbar-title>
+              Entrar
+            </v-toolbar-title>
           </v-toolbar>
-          <div class="pl-4 pr-4 pt-2 pb-2">
+          <div
+            class="pl-4 pr-4 pt-2 pb-2">
             <v-text-field
               label="Correo Electrónico"
               v-model="email"/>
@@ -16,10 +27,12 @@
               label="Contraseña"
               v-model="password"/>
             <br>
-            <div
-              class="error"
-              v-html="error"/>
-            <br>
+            <v-alert
+              outline
+              :value="error"
+              type="warning">
+              {{ error }}
+            </v-alert>
             <v-btn
               @click="login">
               Aceptar
@@ -32,6 +45,7 @@
 </template>
 
 <script>
+import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data () {
     return {
@@ -42,14 +56,16 @@ export default {
   },
   methods: {
     async login () {
-
+      try {
+        await AuthenticationService.login({
+          email: this.email,
+          password: this.password
+        })
+        this.$router.push('/home')
+      } catch (error) {
+        this.error = error.response.data.error
+      }
     }
   }
 }
 </script>
-
-<style scoped>
-.error {
-  color: red;
-}
-</style>
