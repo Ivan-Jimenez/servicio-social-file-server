@@ -5,6 +5,8 @@ import Login from '@/components/Login'
 import Register from '@/components/register'
 import NewSocialService from '@/components/NewSocialService'
 
+import UploadFileTest from '@/components/UploadFileTest'
+
 Vue.use(Router)
 
 export default new Router({
@@ -20,14 +22,19 @@ export default new Router({
       component: Login
     },
     {
-      path: '/register',
+      path: '/registro',
       name: 'register',
       component: Register
     },
     {
-      path: '/social-service',
+      path: '/servicio',
       name: 'social-service',
       component: NewSocialService
+    },
+    {
+      path: '/upload',
+      name: 'upload',
+      component: UploadFileTest
     }
   ]
 })

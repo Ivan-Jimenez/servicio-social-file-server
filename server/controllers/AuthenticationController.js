@@ -46,7 +46,7 @@ module.exports = {
       const socialService = await SocialService.create(req.body)
       res.send(socialService.toJSON())
     } catch (err) {
-      res.status(400).send({
+      res.status(500).send({
         error: 'Verifique los datos.'
       })
     }

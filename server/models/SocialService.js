@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     programName: DataTypes.STRING,
     status: DataTypes.STRING,
+    startDate: DataTypes.DATEONLY,
+    endDate: DataTypes.DATEONLY
     //documents: DataTypes.STRING
   })
   return SocialService

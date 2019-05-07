@@ -1,16 +1,26 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-overflow-btn
+      <v-select
           :items="dropdownCategory"
-          label="Mostrar"
-        ></v-overflow-btn>
-      <v-spacer></v-spacer>
-      <v-text-field v-model="search" append-icon="search" label="Buscar" single-line hide-details></v-text-field>
+          label="Mostrar"/>
+      <v-spacer/>
+      <v-text-field
+        v-model="search"
+        append-icon="search"
+        label="Buscar"
+        single-line
+        hide-details/>
     </v-card-title>
-    <v-data-table :headers="headers" :items="students" :search="search">
-      <template v-slot:items="props">
-        <td>{{ props.item.control }}</td>
+    <v-data-table
+      :headers="headers"
+      :items="students"
+      :search="search">
+      <template
+        v-slot:items="props">
+        <td>
+          {{ props.item.control }}
+        </td>
         <td class="text-xs-left">{{ props.item.career }}</td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.programName }}</td>

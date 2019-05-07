@@ -1,6 +1,8 @@
 const Promise = require('bluebird')
 const bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'))
 
+// TODO: Hash user password
+
 function hashPassword (user, options) {
   // //console.log(user)
   const SALT_FACTOR = 8
@@ -47,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
   })
   User.prototype.comparePassword = function (password) {
     return this.password === password
+    //FIXME: Don´t forget to incoment after hashing the password
     // return bcrypt.compareSync(password, this.password)
   }
   return User
