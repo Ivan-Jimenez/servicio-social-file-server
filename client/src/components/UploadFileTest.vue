@@ -10,6 +10,7 @@
         <input
           type="file"
           id="file"
+          name="file"
           ref="file"
           v-on:change="handleFileUpload()"
         />
@@ -34,19 +35,19 @@ export default {
   methods: {
     handleFileUpload () {
       // this.file = file.$refs.file.files[0]
-      this.file = this.$el.querySelector('input[type=file]').$refs.file.files[0]
+      this.file = this.$refs.file.files[0]
     },
     submitFile () {
       let formData = new FormData()
       formData.append('file', this.file)
+      console.log(this.file)
       axios.post('http://localhost:3000/upload',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        }
-      )
+        })
         .then(function () {
           console.log('success!!')
         })

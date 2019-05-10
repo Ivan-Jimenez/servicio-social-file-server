@@ -339,7 +339,7 @@ export default {
   },
   mounted () {
     // Find input
-    this.input = this.$el.querySelector('input[type=file]')
+    this.input = this.$el.$refs.querySelector('input[type=file]')
     this.input.addEventListener('change', () => this.onFileSelection())
     this.input.style.display = 'none'
 

@@ -3,6 +3,7 @@ const AuthenticationControllerPolicy = require('./polices/AuthenticationControll
 
 const formidable = require('formidable')
 const fs = require('fs')
+const path = require('path')
 
 module.exports = (app) => {
   app.post('/register',
@@ -15,18 +16,19 @@ module.exports = (app) => {
     AuthenticationControllerPolicy.newSocialService,
     AuthenticationController.newSocialService
   ),
-
-  // File upload test
-  app.post('/upload', (req, res) => {
-    res.send({message:'sdsadsadsadsada'})
-    const form = new formidable.IncomingForm()
+  app.post('/upload', function (req, res) {
+    var form = formidable.IncomingForm()
     form.parse(req, function (err, fields, files) {
-      const oldpath = files.file.path
-      const newpath = './testUpload/' + files.filetoupload.name
+      // console.log(files.file.name)
+      // console.log(files.file.path)
+      var oldpath = files.file.path
+      var newpath = path.join(__dirname, '/testUpload/', files.file.name)
+      console.log('OLD PATH: ' + oldpath)
+      console.log("NEW PATH: " + newpath)
       fs.rename(oldpath, newpath, function (err) {
-        if (err) throw err
-        res.write('File uploaded and moved!')
-        res.end()
+        if (err) {
+          console.log(err)
+        }
       })
     })
   })
