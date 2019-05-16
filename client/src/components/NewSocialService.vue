@@ -1,94 +1,73 @@
 <template>
-  <v-layout
-    column
-  >
+  <v-layout column>
     <v-flex>
-      <v-flex
-        xs6
-        offset-xs3
-      >
-        <div
-          class="elevation-2"
-        >
+      <v-flex xs6 offset-xs3>
+        <div class="elevation-2">
           <v-toolbar
             class="cyan darken-2"
             flat
             dense
-            dark
-          >
+            dark>
             <v-toolbar-title>
               Agregar Servicio Social
             </v-toolbar-title>
           </v-toolbar>
-          <div
-            class="pl-4 pr-4 pt-2 pb-2"
-          >
+          <div class="pl-4 pr-4 pt-2 pb-2">
             <v-form
               ref="form"
               v-model="valid"
-              lazy-validation
-            >
+              lazy-validation>
               <v-container>
                 <v-layout>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+                  <!-- Control -->
+                  <v-flex xs12 md6>
                     <v-text-field
                       v-model="control"
                       :rules="controlRules"
                       label="N° Control"
-                      requiered
-                    />
+                      requiered/>
                   </v-flex>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+
+                  <!-- Career -->
+                  <v-flex xs12md6>
                     <v-select
                       v-model="career"
                       :rules="careerRules"
                       :items="dropdownCareer"
                       label="Carrera"
-                      requiered
-                    />
+                      requiered/>
                   </v-flex>
                 </v-layout>
                 <v-layout>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+
+                  <!-- Name -->
+                  <v-flex xs12 md6>
                     <v-text-field
                       label="Nombre(s)"
                       v-model="name"
                       :rules="nameRules"
-                      required
-                    />
+                      required/>
                   </v-flex>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+
+                  <!-- Last name -->
+                  <v-flex xs12 md6>
                     <v-text-field
                       label="Apellido"
                       v-model="lastName"
                       :rules="nameRules"
-                      required
-                    />
+                      required/>
                     </v-flex>
                   </v-layout>
+
+                  <!-- Program -->
                   <v-text-field
                     label="Nombre del Programa"
                     v-model="programName"
                     :rules="nameRules"
-                    required
-                    />
+                    required/>
                   <v-layout>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+                  <!-- Start date -->
+                  <v-flex xs12 md6>
                     <v-menu
                       ref="menu"
                       v-model="menu"
@@ -99,45 +78,37 @@
                       transition="scale-transition"
                       offset-y
                       full-width
-                      min-width="290px"
-                    >
-                      <template
-                        v-slot:activator="{ on }"
-                      >
+                      min-width="290px">
+                      <template v-slot:activator="{ on }">
                         <v-text-field
                           v-model="startDate"
                           label="Fecha de Inicio"
                           prepend-icon="event"
                           readonly
-                          v-on="on"
-                        />
+                          v-on="on"/>
                       </template>
                       <v-date-picker
                         v-model="startDate"
                         no-title
-                        scrollable
-                      >
+                        scrollable>
                         <v-spacer/>
-                        <v-btn flat
+                        <v-btn
+                          flat
                           color="primary"
-                          @click="menu = false"
-                        >
+                          @click="menu = false">
                           Cancelar
                         </v-btn>
                         <v-btn
                           flat
                           color="primary"
-                          @click="$refs.menu.save(startDate)"
-                        >
+                          @click="$refs.menu.save(startDate)">
                           OK
                         </v-btn>
                       </v-date-picker>
                     </v-menu>
-                  </v-flex>
-                  <v-flex
-                    xs12
-                    md6
-                  >
+                  </v-flex> <!-- end start date -->
+                  <!-- Start end date -->
+                  <v-flex xs12 md6>
                     <v-menu
                       ref="menu2"
                       v-model="menu2"
@@ -148,95 +119,76 @@
                       transition="scale-transition"
                       offset-y
                       full-width
-                      min-width="290px"
-                    >
-                      <template
-                        v-slot:activator="{ on }"
-                      >
+                      min-width="290px">
+                      <template v-slot:activator="{ on }">
                         <v-text-field
                           v-model="endDate"
-                          label="Fecha de Inicio"
+                          label="Fecha de Termino"
                           prepend-icon="event"
                           readonly
-                          v-on="on"
-                        />
+                          v-on="on"/>
                       </template>
                       <v-date-picker
                         v-model="endDate"
                         no-title
-                        scrollable
-                      >
+                        scrollable>
                         <v-spacer/>
                         <v-btn
                           flat
                           color="primary"
-                          @click="menu2 = false"
-                        >
+                          @click="menu2 = false">
                           Cancelar
                         </v-btn>
                         <v-btn
                           flat
                           color="primary"
-                          @click="$refs.menu2.save(endDate)"
-                        >
+                          @click="$refs.menu2.save(endDate)">
                           OK
                         </v-btn>
                       </v-date-picker>
                     </v-menu>
-                  </v-flex>
+                  </v-flex><!-- End end date  -->
                 </v-layout>
-                <div
-                  class="upload"
-                >
-                  <slot>
-                    <input
-                      type="file"
-                    />
-                  </slot>
-                  <v-btn
-                    class="custom-upload"
-                    @click="showUpload"
-                    small
-                    flat
-                    color="info"
-                  >
-                    Agregar Archivos
-                  </v-btn>
-                  <small
-                    :class="{ invalid: !invalid }"
-                  >
-                    {{ files.length }} / {{ max }} Archivos Seleccionados.
-                  </small>
-                  <ul
-                    class="files"
-                  >
-                    <li
-                      v-for="(file, index) in files"
-                      :key="file"
-                    >
-                      <v-btn
-                        @click="removeFile(index)"
-                        small
-                        flat
-                        color="error"
-                      >
-                        <v-icon
-                          center
-                          dark
-                        >
-                          delete
-                        </v-icon>
-                      </v-btn>
-                      {{ file.name }}
-                    </li>
-                  </ul>
-                </div>
 
+                <label> Solicitud:</label>
+                <input
+                  type="file"
+                  name="solicitud"
+                  id="solicitud"
+                  v-on:change="handleFileUpload()">
+                <br>
+                <label>Plan de Trabajo:</label>
+                <input
+                  type="file"
+                  id="planTrabajo"
+                  name="planTrabajo"
+                  ref="planTrabajo"
+                  v-on:change="handleFileUpload()"/>
+                  <br>
+
+                <label>Carta Compromiso:</label>
+                <input
+                  type="file"
+                  id="cartaCompromiso"
+                  name="cartaCompromiso"
+                  ref="cartaCompromiso"
+                  v-on:change="handleFileUpload()"/>
+                  <br>
+
+                <label>Carta Asignación:</label>
+                <input
+                  type="file"
+                  id="carataAsignacion"
+                  name="carataAsignacion"
+                  ref="aplication"
+                  v-on:change="handleFileUpload()"/>
+                  <br>
                 <!-- <div
                   class="error"
                   v-html="error"/>
                 <br> -->
-                <v-btn>
+                <v-btn
+                  v-on:click="submitFiles()">
                   Aceptar
                 </v-btn>
               </v-container>
@@ -250,62 +202,42 @@
 
 <script>
 
-// FIXME: The file system its wroking but throws an error. Something about the
+// FIXME: The file system its working but throws an error. Something about the
 // the index value. I think?
 
 // TODO: Find out how to get the file path.
-export default {
-  props: {
-    max: {
-      type: Number,
-      default: 5
-    },
-    value: Array
-  },
-  methods: {
-    /**
-     * Executed, when the user selects a (or multiple) new file(s)
-     * @return {void}
-     */
-    onFileSelection () {
-      // add all selected files
-      for (let file of this.input.files) {
-        this.files.push({ name: file.name })
-      }
 
-      // reset file input
-      this.input.value = null
+const axios = require('axios')
+export default {
+  methods: {
+    handleFileUpload () {
+      // FIXME: Find a better for doing this
+      this.files.push(this.$refs.solicitud.files[0])
+      this.files.push(this.$refs.planTrabajo.files[0])
+      this.files.push(this.$refs.cartaCompromiso.files[0])
+      this.files.push(this.$refs.cartaAsignacion.files[0])
     },
-    /**
-     * Removes the file with the given index
-     * @param {number} index
-     * @returns {void}
-     */
-    removeFile (index) {
-      this.files.splice(index, 1)
-    },
-    showUpload () {
-      const event = new MouseEvent('click', {
-        'view': window,
-        'bubbles': true,
-        'cancelable': true
-      })
-      console.log(event)
-      this.input.dispatchEvent(event)
-    }
-  },
-  computed: {
-    validateFiles () {
-      return this.files.length <= this.max
-    }
-  },
-  watch: {
-    files (files) {
-      this.$emit('input', files)
+    submitFiles () {
+      let formData = new FormData()
+      formData.append('file', this.files)
+      axios.post('http://localhost:3000/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(() => {
+          console.log('success!!')
+        })
+        .catch(() => {
+          console.log('failure!!')
+        })
     }
   },
   data () {
     return {
+      // Fields validation
       valid: false,
       invalid: true,
       control: '',
@@ -336,34 +268,10 @@ export default {
       files: [],
       input: null
     }
-  },
-  mounted () {
-    // Find input
-    this.input = this.$el.$refs.querySelector('input[type=file]')
-    this.input.addEventListener('change', () => this.onFileSelection())
-    this.input.style.display = 'none'
-
-    // Select multiple attribute on input, if max is more than one.
-    if (this.max > 1) {
-      this.input.setAttribute('multiple', 'multiple')
-    } else {
-      this.input.removeAttribute('multiple')
-    }
-
-    // Populate internal value, if external value is given,
-    // attempt to populate external value by firing event if not
-    if (this.value) {
-      this.files = this.value
-    } else {
-      this.$emit('input', [])
-    }
   }
 }
 </script>
 
 <style scoped>
-.files {
-  list-style: none;
-  text-align: left;
-}
+
 </style>

@@ -1,0 +1,8 @@
+{
+  "env": {
+    "PORT": 3000,
+    "DATABASE": "fileserver",
+    "DATABASE_SERVER": "127.0.0.1:27017",
+    "JWT_KEY": "fucking secret"
+  }
+}

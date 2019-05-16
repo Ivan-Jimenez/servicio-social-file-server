@@ -14,6 +14,13 @@
           ref="file"
           v-on:change="handleFileUpload()"
         />
+        <input
+          type="file"
+          id="file2"
+          name="file2"
+          ref="file2"
+          v-on:change="handleFileUpload()"
+        />
         <button
           v-on:click="submitFile()"
         >
@@ -29,18 +36,19 @@ const axios = require('axios')
 export default {
   data () {
     return {
-      file: ''
+      file: []
     }
   },
   methods: {
     handleFileUpload () {
       // this.file = file.$refs.file.files[0]
-      this.file = this.$refs.file.files[0]
+      this.file[0] = this.$refs.file.files[0]
+      this.file[1] = this.$refs.file2.files[0]
     },
     submitFile () {
       let formData = new FormData()
       formData.append('file', this.file)
-      console.log(this.file)
+      formData.append('file2', this.file)
       axios.post('http://localhost:3000/upload',
         formData,
         {
@@ -48,10 +56,10 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         })
-        .then(function () {
+        .then(() => {
           console.log('success!!')
         })
-        .catch(function () {
+        .catch(() => {
           console.log('failure!!')
         })
     }

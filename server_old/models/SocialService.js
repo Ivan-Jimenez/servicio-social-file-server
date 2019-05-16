@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     programName: DataTypes.STRING,
     status: DataTypes.STRING,
     startDate: DataTypes.DATEONLY,
-    endDate: DataTypes.DATEONLY
-    //documents: DataTypes.STRING
+    endDate: DataTypes.DATEONLY,
+    documents: DataTypes.STRING
   })
   return SocialService
 }
