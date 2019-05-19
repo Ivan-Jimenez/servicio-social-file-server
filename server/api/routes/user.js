@@ -4,8 +4,6 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-// TODO: Token
-
 const User = require('../models/User')
 
 router.post('/signup', (req, res, next) => {

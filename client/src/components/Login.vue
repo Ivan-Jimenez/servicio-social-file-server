@@ -36,6 +36,9 @@
             <v-btn
               @click="login">
               Aceptar
+              <v-icon right>
+                check_circle
+              </v-icon>
             </v-btn>
           </div>
         </div>
@@ -57,13 +60,16 @@ export default {
   methods: {
     async login () {
       try {
-        await AuthenticationService.login({
+        const response = await AuthenticationService.login({
           email: this.email,
           password: this.password
         })
         this.$router.push('/home')
-      } catch (error) {
-        this.error = error.response.data.error
+        // TODO: Find out how to storage the token.
+        console.log({token: response.data.token})
+      } catch (err) {
+        console.log(err.response.data.message)
+        this.error = err.response.data.message
       }
     }
   }

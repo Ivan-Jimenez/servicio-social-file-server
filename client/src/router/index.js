@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
-import Register from '@/components/register'
+import Signup from '@/components/Signup'
 import NewSocialService from '@/components/NewSocialService'
 
 import UploadFileTest from '@/components/UploadFileTest'
@@ -24,7 +24,7 @@ export default new Router({
     {
       path: '/signup',
       name: 'signup',
-      component: Register
+      component: Signup
     },
     {
       path: '/servicio',
