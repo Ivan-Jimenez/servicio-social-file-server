@@ -14,7 +14,7 @@ router.post('/signup', (req, res, next) => {
     .then(user => {
       if (user.length >= 1) {
         return res.status(409).json({
-          message: 'El correo ya esta siendo usado!'
+          error: 'El correo ya esta siendo usado!'
         })
       }
       bcrypt.hash(req.body.password, 10, (err, hash) => {

@@ -52,7 +52,6 @@
                   type="password"
                   label="Contraseña"
                   v-model="password"
-                  :rules="passwordRules"
                   required/>
                 <br>
                 <v-text-field
@@ -126,7 +125,7 @@ export default {
         this.$router.push('/login')
       } catch (error) {
         this.success = false
-        this.error = error.response.data.error
+        this.error = error.error
       }
     },
     validate () {
