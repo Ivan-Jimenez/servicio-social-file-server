@@ -116,16 +116,17 @@ export default {
     async register () {
       this.validate()
       try {
-        await AuthenticationService.register({
+        const response = await AuthenticationService.register({
           name: this.name,
           lastName: this.lastName,
           email: this.email,
           password: this.password
         })
         this.$router.push('/login')
-      } catch (error) {
+        console.log(response.data.message)
+      } catch (err) {
         this.success = false
-        this.error = error.error
+        this.error = err.response.data.error
       }
     },
     validate () {

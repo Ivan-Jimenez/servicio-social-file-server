@@ -68,8 +68,7 @@ export default {
         // TODO: Find out how to storage the token.
         console.log({token: response.data.token})
       } catch (err) {
-        console.log(err.response.data.message)
-        this.error = err.response.data.message
+        this.error = err.response.data.error
       }
     }
   }

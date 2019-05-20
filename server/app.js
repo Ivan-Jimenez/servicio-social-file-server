@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
 const userRoutes = require('./api/routes/user')
+const servicioRoutes = require('./api/routes/servicio')
 
 mongoose.connect(`mongodb://${process.env.DATABASE_SERVER}/${process.env.DATABASE}`, {useNewUrlParser: true})
 mongoose.Promise = global.Promise // Shuts the deprecation warning
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/user', userRoutes)
+app.use('/servicio', servicioRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Nice try bitch!!')

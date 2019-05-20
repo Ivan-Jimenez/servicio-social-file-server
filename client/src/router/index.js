@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
-import NewSocialService from '@/components/NewSocialService'
+import Servicio from '@/components/Servicio'
 
 import UploadFileTest from '@/components/UploadFileTest'
 
@@ -28,8 +28,8 @@ export default new Router({
     },
     {
       path: '/servicio',
-      name: 'social-service',
-      component: NewSocialService
+      name: 'servicio',
+      component: Servicio
     },
     {
       path: '/upload',

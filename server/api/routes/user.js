@@ -52,13 +52,13 @@ router.post('/login', (req, res, next) => {
     .then(user => {
       if (user.length < 1) {
         return res.status(401).json({
-          message: 'Autenticación fallida!!'
+          error: 'Autenticación fallida!!'
         })
       }
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
           return res.status(401).json({
-            message: 'Autenticación fallida!!'
+            error: 'Autenticación fallida!!'
           })
         }
         if (result) {
@@ -80,7 +80,7 @@ router.post('/login', (req, res, next) => {
           })
         }
         res.status(401).json({
-          message: 'Autenticación fallida!!'
+          error: 'Autenticación fallida!!'
         })
       })
     })

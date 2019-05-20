@@ -65,3 +65,4 @@ typings/
 .next
 
 server/testUpload
+server/files

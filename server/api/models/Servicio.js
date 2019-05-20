@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const servicioSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  supervisor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: true },
   control: {
     type: Number,
     require: true,
