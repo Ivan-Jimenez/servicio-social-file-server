@@ -153,18 +153,54 @@
                   -> Carta compromiso
                   -> Carta asignación
                  -->
+                 <!-- Solicitud -->
                 <v-text-field
                   prepend-icon="attach_file"
-                  label= "Archivos"
-                  v-on:click="$emit('click', $refs.files.click())"
-                  v-model="fileName"/>
+                  label= "Solicitud"
+                  v-on:click="$emit('click', $refs.solicitud.click())"
+                  v-model="fileName.solicitud"/>
                   <input
-                    multiple
                     type="file"
                     style="display: none"
-                    ref="files"
+                    ref="solicitud"
                     accept=".pdf"
-                    @change="onFilesPicked">
+                    @change="onSolicitudFilePicked">
+                  <!-- Plan de Trabajo -->
+                  <v-text-field
+                    prepend-icon="attach_file"
+                    label= "Plan de Trabajo"
+                    v-on:click="$emit('click', $refs.planTrabajo.click())"
+                    v-model="fileName.planTrabajo"/>
+                    <input
+                      type="file"
+                      style="display: none"
+                      ref="planTrabajo"
+                      accept=".pdf"
+                      @change="onPlanTrabajoFilePicked">
+                  <!-- Carta Compromiso -->
+                  <v-text-field
+                    prepend-icon="attach_file"
+                    label= "Carta Compromiso"
+                    v-on:click="$emit('click', $refs.cartaCompromiso.click())"
+                    v-model="fileName.cartaCompromiso"/>
+                    <input
+                      type="file"
+                      style="display: none"
+                      ref="cartaCompromiso"
+                      accept=".pdf"
+                      @change="onCartaCompromisoFilePicked">
+                  <!-- Carta Asignación -->
+                  <v-text-field
+                    prepend-icon="attach_file"
+                    label= "Carta Asignación"
+                    v-on:click="$emit('click', $refs.cartaAsignacion.click())"
+                    v-model="fileName.cartaAsignacion"/>
+                    <input
+                      type="file"
+                      style="display: none"
+                      ref="cartaAsignacion"
+                      accept=".pdf"
+                      @change="onCartaAsignacionFilePicked">
                 <!-- Submit button -->
                 <v-btn
                   v-on:click="submitFiles">
@@ -217,34 +253,33 @@ export default {
         'Ing. Informática'
       ],
       // Files stuff
-      fileName: '',
-      FILE: []
+      fileName: {
+        solicitud: '',
+        planTrabajo: '',
+        cartaCompromiso: '',
+        cartaAsignacion: ''
+
+      },
+      FILE: [],
+      fileIndex: {
+        solicitud: 0,
+        planTrabajo: 1,
+        cartaCompromiso: 2,
+        cartaAsignacion: 3
+      }
     }
   },
   methods: {
-    onFilesPicked (e) {
-      console.log('fuck!!!!')
-      const files = e.target.files
-      if (files[0] !== undefined) {
-        console.log(files[0].name)
-        this.fileName = files[0].name
-        if (this.fileName.lastIndexOf('.') <= 0) {
-          return
-        }
-        const fr = new FileReader()
-        fr.readAsDataURL(files[0])
-        fr.addEventListener('load', () => {
-          this.FILE = files
-        })
-      } else {
-        this.fileName = ''
-        this.FIlE = ''
-      }
-    },
     async submitFiles () {
+      // this.validate()
       const formData = new FormData()
-      formData.append('file1', this.FILE[0])
-      formData.append('file2', this.FILE[1])
+      // Fields
+
+      // Files
+      formData.append('solicitud', this.FILE[0])
+      formData.append('planTrabajo', this.FILE[this.fileIndex.planTrabajo])
+      formData.append('cartaCompromiso', this.FILE[this.fileIndex.cartaCompromiso])
+      formData.append('cartaAsignacion', this.FILE[this.fileIndex.cartaAsignacion])
       try {
         await AuthenticationService.servicio(
           formData,
@@ -256,6 +291,84 @@ export default {
         )
       } catch (err) {
         console.log(err.message)
+      }
+    },
+    onSolicitudFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        // console.log(files[0].name)
+        this.fileName.solicitud = files[0].name
+        console.log(this.fileName.solicitud)
+        if (this.fileName.solicitud.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.solicitud] = files[0]
+        })
+      } else {
+        this.fileName.solicitud = ''
+        this.FIlE[this.fileIndex.solicitud] = ''
+      }
+    },
+    onPlanTrabajoFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        console.log(files[0].name)
+        this.fileName.planTrabajo = files[0].name
+        if (this.fileName.planTrabajo.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.planTrabajo] = files[0]
+        })
+      } else {
+        this.fileName.planTrabajo = ''
+        this.FIlE[this.fileIndex.planTrabajo] = ''
+      }
+    },
+    onCartaCompromisoFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        console.log(files[0].name)
+        this.fileName.cartaCompromiso = files[0].name
+        if (this.fileName.cartaCompromiso.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.cartaCompromiso] = files[0]
+        })
+      } else {
+        this.fileName.cartaCompromiso = ''
+        this.FIlE[this.fileIndex.cartaCompromiso] = ''
+      }
+    },
+    onCartaAsignacionFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        // console.log(files[0].name)
+        this.fileName.cartaAsignacion = files[0].name
+        if (this.fileName.cartaAsignacion.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.cartaAsignacion] = files[0]
+        })
+      } else {
+        this.fileName.cartaAsignacion = ''
+        this.FIlE[this.fileIndex.cartaAsignacion] = ''
+      }
+    },
+    validate () {
+      if (this.$refs.form.validate()) {
+        this.snackbar = true
       }
     }
   }

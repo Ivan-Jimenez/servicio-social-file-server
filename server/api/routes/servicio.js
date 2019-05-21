@@ -8,18 +8,12 @@ const storage = multer.diskStorage({
     callback(null, './files/')
   },
   filename(req, file, callback) {
-    console.log(file)
-    callback(null, new Date().toISOString().replace(/:/g, '-') + 'filenamebitch' + file.originalname)
+    console.log(req.body)
+    callback(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname.replace(/ /g, '-'))
   }
 })
 
-// FIXME: This shit is not working for some reason.
 const fileFilter = function (req, file, callback) {
-  // if (file.mimeType === 'image/jepg' || file.mimeType == 'image/png') {
-  //   return callback(null, true) // Acepts the file.
-  // } else {
-  //   callback(null, false) // Rejects the file.
-  // }
   const ext = file.originalname.lastIndexOf('.');
   const fext = (ext < 1) ? '' : file.originalname.substr(ext + 1) 
   if (fext !== 'pdf') {
@@ -32,12 +26,12 @@ const uploadFile = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 5 },  // Size limit of the file in Bytes.
   fileFilter: fileFilter
-}).fields(
-  [
-    { name: 'file1' },
-    { name: 'file2' }
-  ]
-)
+}).fields([
+  { name: 'solicitud' },
+  { name: 'planTrabajo' },
+  { name: 'cartaCompromiso' },
+  { name: 'cartaAsignacion' }
+])
 
 const Servicio = require('../models/Servicio')
 
@@ -75,9 +69,8 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', uploadFile, (req, res, next) => {
-  // console.log(req.files)
-  console.log(req.body)
-  // res.send(req.files)
+  // console.log(req.files.file1)
+  // console.log(req.body)
   res.status(200).json({
     message: 'Fuck yeah!!'
   })
