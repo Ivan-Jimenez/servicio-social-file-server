@@ -3,27 +3,16 @@
     <v-text-field
       prepend-icon="attach_file"
       label= "Archivo 1"
-      @click="pickFile"
-      v-model="FILE_NAME[0]"/>
+      v-on:click="$emit('click', $refs.image1.click())"
+      v-model="fileName"/>
       <input
         type="file"
+        multiple
         style="display: none"
-        ref="image"
+        ref="image1"
         accept=".pdf"
         @change="onFilePicked">
       <!-- FILE TWO -->
-      <v-text-field
-        prepend-icon="attach_file"
-        label="Archivo 2"
-        v-on:click="$emit('click', $refs.image1.click())"
-        @click="pickFile"
-        v-model="FILE_NAME[1]"/>
-        <input
-          type="file"
-          style="display: none"
-          ref="image1"
-          accept=".pdf"
-          @change="onFilePicked">
       <v-btn @click="submitFile">
         Aceptar
       </v-btn>
@@ -36,49 +25,40 @@ import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
-      FILE_NAME: [
-        'Archivo 1->fucker',
-        'Archivo 2->fucker'
-      ],
-      FILE: []
+      fileName: '',
+      fileName2: '',
+      fileFile: ''
     }
   },
   methods: {
     pickFile (e) {
       // e.target.id.click()
-      console.log(e.target.ref)
+      // console.log(e.target.ref)
     },
     onFilePicked (e) {
-      console.log('dsadasdsa')
       const files = e.target.files
       if (files[0] !== undefined) {
-        this.FILE_NAME = files[0].name
-        if (this.FILE_NAME.lastIndexOf('.') <= 0) {
+        this.fileName = files[0].name
+        if (this.fileName.lastIndexOf('.') <= 0) {
           return
         }
         const fr = new FileReader()
         fr.readAsDataURL(files[0])
         fr.addEventListener('load', () => {
-          this.FILE = files[0]
-          console.log(this.FILE)
+          this.fileFile = files
         })
       } else {
-        this.FILE_NAME = ''
-        this.FILE = ''
+        this.fileName = ''
+        this.fileFile[0] = ''
       }
     },
-    handleFileUpload () {
-      // this.file = file.$refs.file.files[0]
-      this.file = this.$refs.FILE.files[0]
-      // this.file[1] = this.$refs.file2.files[0]
-    },
-    submitFile () {
-      console.log(this.FILE.name)
+    async submitFile () {
       const formData = new FormData()
-      formData.append('FILE', this.FILE)
-      formData.append('FILE_NAME', this.FILE_NAME)
+      formData.append('FILE', this.fileFile[0])
+      formData.append('FILE2', this.fileFile[1])
+      formData.append('archivo1', 'ARCHIVO1')
       try {
-        AuthenticationService.servicio(
+        await AuthenticationService.servicio(
           formData,
           {
             headers: {

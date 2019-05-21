@@ -48,7 +48,6 @@
                       :rules="nameRules"
                       required/>
                   </v-flex>
-
                   <!-- Last name -->
                   <v-flex xs12 md6>
                     <v-text-field
@@ -58,7 +57,6 @@
                       required/>
                     </v-flex>
                   </v-layout>
-
                   <!-- Program -->
                   <v-text-field
                     label="Nombre del Programa"
@@ -149,47 +147,29 @@
                     </v-menu>
                   </v-flex><!-- End end date  -->
                 </v-layout>
-
-                <label> Solicitud:</label>
-                <input
-                  type="file"
-                  name="solicitud"
-                  id="solicitud"
-                  v-on:change="handleFileUpload()">
-                <br>
-                <label>Plan de Trabajo:</label>
-                <input
-                  type="file"
-                  id="planTrabajo"
-                  name="planTrabajo"
-                  ref="planTrabajo"
-                  v-on:change="handleFileUpload()"/>
-                  <br>
-
-                <label>Carta Compromiso:</label>
-                <input
-                  type="file"
-                  id="cartaCompromiso"
-                  name="cartaCompromiso"
-                  ref="cartaCompromiso"
-                  v-on:change="handleFileUpload()"/>
-                  <br>
-
-                <label>Carta Asignación:</label>
-                <input
-                  type="file"
-                  id="carataAsignacion"
-                  name="carataAsignacion"
-                  ref="aplication"
-                  v-on:change="handleFileUpload()"/>
-                  <br>
-                <!-- <div
-                  class="error"
-                  v-html="error"/>
-                <br> -->
+                <!-- FILES
+                  -> Solicitud
+                  -> Plan de trabajo
+                  -> Carta compromiso
+                  -> Carta asignación
+                 -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label= "Archivos"
+                  v-on:click="$emit('click', $refs.files.click())"
+                  v-model="fileName"/>
+                  <input
+                    multiple
+                    type="file"
+                    style="display: none"
+                    ref="files"
+                    accept=".pdf"
+                    @change="onFilesPicked">
+                <!-- Submit button -->
                 <v-btn
-                  v-on:click="submitFiles()">
+                  v-on:click="submitFiles">
                   Aceptar
+                  <v-icon right>check_circle</v-icon>
                 </v-btn>
               </v-container>
             </v-form>
@@ -205,36 +185,8 @@
 // FIXME: The file system its working but throws an error. Something about the
 // the index value. I think?
 
-// TODO: Find out how to get the file path.
-
-const axios = require('axios')
+import AuthenticationService from '../services/AuthenticationService'
 export default {
-  methods: {
-    handleFileUpload () {
-      // FIXME: Find a better for doing this
-      this.files.push(this.$refs.solicitud.files[0])
-      this.files.push(this.$refs.planTrabajo.files[0])
-      this.files.push(this.$refs.cartaCompromiso.files[0])
-      this.files.push(this.$refs.cartaAsignacion.files[0])
-    },
-    submitFiles () {
-      let formData = new FormData()
-      formData.append('file', this.files)
-      axios.post('http://localhost:3000/upload',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then(() => {
-          console.log('success!!')
-        })
-        .catch(() => {
-          console.log('failure!!')
-        })
-    }
-  },
   data () {
     return {
       // Fields validation
@@ -265,8 +217,46 @@ export default {
         'Ing. Informática'
       ],
       // Files stuff
-      files: [],
-      input: null
+      fileName: '',
+      FILE: []
+    }
+  },
+  methods: {
+    onFilesPicked (e) {
+      console.log('fuck!!!!')
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        console.log(files[0].name)
+        this.fileName = files[0].name
+        if (this.fileName.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE = files
+        })
+      } else {
+        this.fileName = ''
+        this.FIlE = ''
+      }
+    },
+    async submitFiles () {
+      const formData = new FormData()
+      formData.append('file1', this.FILE[0])
+      formData.append('file2', this.FILE[1])
+      try {
+        await AuthenticationService.servicio(
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+      } catch (err) {
+        console.log(err.message)
+      }
     }
   }
 }

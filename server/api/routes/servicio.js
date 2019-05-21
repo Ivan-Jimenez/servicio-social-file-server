@@ -8,6 +8,7 @@ const storage = multer.diskStorage({
     callback(null, './files/')
   },
   filename(req, file, callback) {
+    console.log(file)
     callback(null, new Date().toISOString().replace(/:/g, '-') + 'filenamebitch' + file.originalname)
   }
 })
@@ -31,7 +32,12 @@ const uploadFile = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 5 },  // Size limit of the file in Bytes.
   fileFilter: fileFilter
-})
+}).fields(
+  [
+    { name: 'file1' },
+    { name: 'file2' }
+  ]
+)
 
 const Servicio = require('../models/Servicio')
 
@@ -57,7 +63,7 @@ router.get('/', (req, res, next) => {
             }
           }
         })
-      }
+    }
       res.status(200).json(response)
     })
     .catch(err => {
@@ -68,11 +74,10 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.post('/', uploadFile.array('FILE', 4), (req, res, next) => {
-  console.log(req.file)
-  const name = req.file.path.lastIndexOf('filenamebitch')
-  console.log(req.file.path.substr(name + 13))
-  // console.log(req.body)
+router.post('/', uploadFile, (req, res, next) => {
+  // console.log(req.files)
+  console.log(req.body)
+  // res.send(req.files)
   res.status(200).json({
     message: 'Fuck yeah!!'
   })
