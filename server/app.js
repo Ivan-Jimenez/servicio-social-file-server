@@ -1,18 +1,18 @@
-const express = require('express')
-const app = express()
-const morgan = require('morgan')
+const express    = require('express')
+const app        = express()
+const morgan     = require('morgan')
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
+const mongoose   = require('mongoose')
 
-const userRoutes = require('./api/routes/user')
+// Routes
+const userRoutes     = require('./api/routes/user')
 const servicioRoutes = require('./api/routes/servicio')
 
 mongoose.connect(`mongodb://${process.env.DATABASE_SERVER}/${process.env.DATABASE}`, {useNewUrlParser: true})
 mongoose.Promise = global.Promise // Shuts the deprecation warning
 
-// Morgan handles the middleware. Diplays server logs.
 app.use(morgan('dev'))
-app.use('/files', express.static('files')) // Makes the files folder available to everyone
+app.use('/files', express.static('files'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 

@@ -158,7 +158,10 @@
                   prepend-icon="attach_file"
                   label= "Solicitud"
                   v-on:click="$emit('click', $refs.solicitud.click())"
-                  v-model="fileName.solicitud"/>
+                  v-model="fileName.solicitud"
+                  value="fileName.solicitud"
+                  :rules="fileRules"
+                  required/>
                   <input
                     type="file"
                     style="display: none"
@@ -170,7 +173,9 @@
                     prepend-icon="attach_file"
                     label= "Plan de Trabajo"
                     v-on:click="$emit('click', $refs.planTrabajo.click())"
-                    v-model="fileName.planTrabajo"/>
+                    v-model="fileName.planTrabajo"
+                    :rules="fileRules"
+                    required/>
                     <input
                       type="file"
                       style="display: none"
@@ -182,7 +187,9 @@
                     prepend-icon="attach_file"
                     label= "Carta Compromiso"
                     v-on:click="$emit('click', $refs.cartaCompromiso.click())"
-                    v-model="fileName.cartaCompromiso"/>
+                    v-model="fileName.cartaCompromiso"
+                    :rules="fileRules"
+                    required/>
                     <input
                       type="file"
                       style="display: none"
@@ -194,13 +201,22 @@
                     prepend-icon="attach_file"
                     label= "Carta Asignación"
                     v-on:click="$emit('click', $refs.cartaAsignacion.click())"
-                    v-model="fileName.cartaAsignacion"/>
+                    v-model="fileName.cartaAsignacion"
+                    :rules="fileRules"
+                    required/>
                     <input
                       type="file"
                       style="display: none"
                       ref="cartaAsignacion"
                       accept=".pdf"
                       @change="onCartaAsignacionFilePicked">
+                <!-- Validation alert -->
+                <v-alert
+                  outline
+                  :value="error"
+                  type="warning">
+                  {{ error }}
+                </v-alert>
                 <!-- Submit button -->
                 <v-btn
                   v-on:click="submitFiles">
@@ -217,10 +233,6 @@
 </template>
 
 <script>
-
-// FIXME: The file system its working but throws an error. Something about the
-// the index value. I think?
-
 import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
@@ -237,7 +249,7 @@ export default {
       careerRules: [ v => !!v || 'Debe seleccionar una carrera.' ],
       name: '',
       lastName: '',
-      nameRules: [ v => 'Este compo no puede estar vacío.' ],
+      nameRules: [ v => !!v || 'Este campo no puede estar vacío.' ],
       programName: '',
       startDate: new Date().toISOString().substring(0, 10),
       endDate: new Date().toISOString().substring(0, 10),
@@ -253,6 +265,7 @@ export default {
         'Ing. Informática'
       ],
       // Files stuff
+      fileRules: [ v => !!v || 'Seleccione un archivo.' ],
       fileName: {
         solicitud: '',
         planTrabajo: '',
@@ -266,7 +279,8 @@ export default {
         planTrabajo: 1,
         cartaCompromiso: 2,
         cartaAsignacion: 3
-      }
+      },
+      error: null
     }
   },
   methods: {
@@ -274,14 +288,20 @@ export default {
       // this.validate()
       const formData = new FormData()
       // Fields
-
+      formData.append('control', this.control)
+      formData.append('career', this.career)
+      formData.append('name', this.name)
+      formData.append('lastName', this.lastName)
+      formData.append('programName', this.programName)
+      formData.append('startDate', this.startDate)
+      formData.append('endDate', this.endDate)
       // Files
       formData.append('solicitud', this.FILE[0])
       formData.append('planTrabajo', this.FILE[this.fileIndex.planTrabajo])
       formData.append('cartaCompromiso', this.FILE[this.fileIndex.cartaCompromiso])
       formData.append('cartaAsignacion', this.FILE[this.fileIndex.cartaAsignacion])
       try {
-        await AuthenticationService.servicio(
+        const response = await AuthenticationService.servicio(
           formData,
           {
             headers: {
@@ -289,16 +309,19 @@ export default {
             }
           }
         )
+        // this.$router.push('/home')
+        console.log(response.data.message)
+        alert(response.data.message)
       } catch (err) {
-        console.log(err.message)
+        this.error = err.response.data.error
+        alert(err.response.data.message)
       }
     },
+    // TODO: Find a better way to manage the file pick.
     onSolicitudFilePicked (e) {
       const files = e.target.files
       if (files[0] !== undefined) {
-        // console.log(files[0].name)
         this.fileName.solicitud = files[0].name
-        console.log(this.fileName.solicitud)
         if (this.fileName.solicitud.lastIndexOf('.') <= 0) {
           return
         }
@@ -315,7 +338,6 @@ export default {
     onPlanTrabajoFilePicked (e) {
       const files = e.target.files
       if (files[0] !== undefined) {
-        console.log(files[0].name)
         this.fileName.planTrabajo = files[0].name
         if (this.fileName.planTrabajo.lastIndexOf('.') <= 0) {
           return
