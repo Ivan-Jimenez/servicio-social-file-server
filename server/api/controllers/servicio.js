@@ -16,6 +16,7 @@ exports.servicio_get_all = (req, res, next) => {
             control  : doc.control,
             name     : doc.name,
             lastName : doc.lastName,
+            programName: doc.programName,
             startDate: doc.startDate,
             endDate  : doc.endDate,
             request  : {
@@ -36,7 +37,7 @@ exports.servicio_get_all = (req, res, next) => {
 }
 
 exports.initial_documents_get_one = (req, res, next) => {
-  InitialDocuments.find({ servicio: req.params.Id })
+  InitialDocuments.find({ servicio: req.params.servicioId })
     .exec()
     .then(docs => {
       const response = {
@@ -137,6 +138,7 @@ exports.servicio_new = (req, res, next) => {
         career   : req.body.career,
         name     : req.body.name,
         lastName : req.body.lastName,
+        programName: req.body.programName,
         startDate: req.body.startDate,
         endDate  : req.body.endDate
       })

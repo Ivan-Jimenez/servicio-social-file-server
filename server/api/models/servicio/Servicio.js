@@ -6,6 +6,7 @@ const servicioSchema = mongoose.Schema({
   control   : { type: Number, require: true, unique: true },
   name      : { type: String, require: true },
   lastName  : { type: String, require: true },
+  programName: { type: String, require: true },
   startDate : { type: Date,   require: true },
   endDate   : { type: Date,   require: true }
 })

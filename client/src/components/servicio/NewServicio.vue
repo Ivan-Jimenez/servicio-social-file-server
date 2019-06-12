@@ -233,7 +233,7 @@
 </template>
 
 <script>
-import AuthenticationService from '../services/AuthenticationService'
+import AuthenticationService from '../../services/AuthenticationService'
 export default {
   data () {
     return {
@@ -285,7 +285,9 @@ export default {
   },
   methods: {
     async submitFiles () {
-      // this.validate()
+      if (!this.validate()) {
+        this.error = 'Proporcione la información solicitada!'
+      }
       const formData = new FormData()
       // Fields
       formData.append('control', this.control)
@@ -309,12 +311,10 @@ export default {
             }
           }
         )
-        // this.$router.push('/home')
+        this.$router.push('/home')
         console.log(response.data.message)
-        alert(response.data.message)
       } catch (err) {
         this.error = err.response.data.error
-        alert(err.response.data.message)
       }
     },
     // TODO: Find a better way to manage the file pick.
@@ -355,7 +355,6 @@ export default {
     onCartaCompromisoFilePicked (e) {
       const files = e.target.files
       if (files[0] !== undefined) {
-        console.log(files[0].name)
         this.fileName.cartaCompromiso = files[0].name
         if (this.fileName.cartaCompromiso.lastIndexOf('.') <= 0) {
           return
@@ -373,7 +372,6 @@ export default {
     onCartaAsignacionFilePicked (e) {
       const files = e.target.files
       if (files[0] !== undefined) {
-        // console.log(files[0].name)
         this.fileName.cartaAsignacion = files[0].name
         if (this.fileName.cartaAsignacion.lastIndexOf('.') <= 0) {
           return

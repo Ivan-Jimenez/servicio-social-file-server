@@ -3,7 +3,9 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
-import Servicio from '@/components/Servicio'
+import Servicio from '@/components/servicio/NewServicio'
+import ServicioReportTwo from '@/components/servicio/ServicioReportTwo'
+import ServicioReportFinal from '@/components/servicio/ServicioReportFinal'
 
 import UploadFileTest from '@/components/UploadFileTest'
 
@@ -29,6 +31,16 @@ export default new Router({
       path: '/servicio',
       name: 'servicio',
       component: Servicio
+    },
+    {
+      path: '/report',
+      name: 'report',
+      component: ServicioReportTwo
+    },
+    {
+      path: '/final',
+      name: 'final',
+      component: ServicioReportFinal
     },
     {
       path: '/upload',

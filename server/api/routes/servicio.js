@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = function (req, file, callback) {
-  const ext = file.originalname.lastIndexOf('.');
+  const ext = file.originalname.lastIndexOf('.')
   const fext = (ext < 1) ? '' : file.originalname.substr(ext + 1) 
   if (fext !== 'pdf') {
     return callback(null, false)
@@ -37,7 +37,7 @@ const uploadFile = multer({
 router.get('/', ServicioController.servicio_get_all)
 
 /** Fetch initial documents */
-router.get('/initialDocuments/:Id', ServicioController.initial_documents_get_one)
+router.get('/initialDocuments/:servicioId', ServicioController.initial_documents_get_one)
 
 /** Fetch all inital documents */
 router.get('/initialDocuments/', ServicioController.initial_documents_get_all)

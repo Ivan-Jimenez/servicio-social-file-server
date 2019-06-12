@@ -9,5 +9,8 @@ export default {
   },
   servicio (credentials) {
     return Api().post('/servicio', credentials)
+  },
+  reporte (credentials) {
+    return Api().post('/reporte', credentials)
   }
 }

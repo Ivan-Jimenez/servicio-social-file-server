@@ -6,4 +6,4 @@ const bimesterTwoReportSchema = mongoose.Schema({
   path: { type: String, require: true, unique: true }
 })
 
-module.exports = mongoose.model('InitialDocuments', bimesterTwoReportSchema)
+module.exports = mongoose.model('BimesterTwoReport', bimesterTwoReportSchema)
