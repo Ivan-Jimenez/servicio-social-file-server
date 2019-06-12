@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
-const BimesterTwoReport = require('../models/servicio/documents/BimesterTwoReport')
+const FinalReport = require('../models/servicio/documents/FinalReport')
 const Servicio = require('../models/servicio/Servicio')
 
-exports.report_new = (req, res, next) => {
+exports.final_new = (req, res, next) => {
   Servicio.find({ control: req.body.control })
     .exec()
     .then(servicio => {
@@ -23,13 +23,13 @@ exports.report_new = (req, res, next) => {
     })
 }
 
-exports.report_documents_get_one = (req, res, next) => {
-  BimesterTwoReport.find({ servicio: req.params.servicioId })
+exports.final_documents_get_one = (req, res, next) => {
+  FinalReport.find({ servicio: req.params.servicioId })
     .exec()
     .then(docs => {
       const response = {
         count: docs.length,
-        reportDocuments: docs.map(doc => {
+        finalDocuments: docs.map(doc => {
           return {
             _id: doc._id,
             servicio: doc.servicio,
@@ -47,44 +47,21 @@ exports.report_documents_get_one = (req, res, next) => {
     })
 }
 
-exports.report_documents_get_all = (req, res, next) => {
-  BimesterTwoReport.find()
+exports.final_documents_get_all = (req, res, next) => {
+  FinalReport.find()
     .select('_id servicio path')
     .exec()
     .then(docs => {
       const response = {
         count: docs.length,
-        documents: docs.map(doc => {
+        documents: doc.map(doc => {
           return {
-            _Id: doc._id,
+            _id: doc._id,
             servicio: doc.servicio,
             path: doc.path
           }
         })
       }
-      res.status(200).json(response)
-    })
-    .catch(err => {
-      console.log(500).json({
-        error: err
-      })
-    })
-}
-
-exports.report_documents_delete_one = (req, res, next) => {
-  BimesterTwoReport.remove({ servicio: req.params.servicioId })
-    .exec()
-    .then(result => {
-      console.log(result)
-      res.status(200).json({
-        message: 'Documentos borrados!'
-      })
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        error: err
-      })
     })
 }
 
@@ -93,12 +70,7 @@ exports.report_documents_delete_one = (req, res, next) => {
 *******************************************************************************/
 
 function saveFiles (servicioId, files, res) {
-  BimesterTwoReport.insertMany([
-    {
-      _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
-      path: files.reporte[0].path
-    },
+  FinalReport.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
@@ -107,7 +79,37 @@ function saveFiles (servicioId, files, res) {
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      path: files.evaluacionFinal[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
       path: files.autoevaluacion[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
+      path: files.autoevaluacionFinal[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
+      path: files.reporte[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
+      path: files.reporteFinal[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
+      path: files.evaluacionActividades[0].path
+    },
+    {
+      _id: new mongoose.Types.ObjectId(),
+      servicio: servicioId,
+      path: files.cartaTerminacion[0].path
     }
   ])
   .then(result => {

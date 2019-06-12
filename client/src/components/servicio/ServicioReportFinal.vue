@@ -63,6 +63,108 @@
                     ref="evaluacionFinal"
                     accept=".pdf"
                     @change="onEvaluacionFinalFilePicked">
+                <!-- Autoevaluación cualitativa -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Autoevaluación Cualitativa por el Estudiante."
+                  v-on:click="$emit('click', $refs.autoevaluacion.click())"
+                  v-model="fileName.autoevaluacion"
+                  value="fileName.autoevaluacion"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="autoevaluacion"
+                    accept=".pdf"
+                    @change="onAutoevaluacionFilePicked">
+                <!-- Autoevaluación cualitativa final -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Autoevaluación Cualitativa por el Estudiante Final."
+                  v-on:click="$emit('click', $refs.autoevaluacionFinal.click())"
+                  v-model="fileName.autoevaluacionFinal"
+                  value="fileName.autoevaluacionFinal"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="autoevaluacionFinal"
+                    accept=".pdf"
+                    @change="onAutoevaluacionFinalFilePicked">
+                <!-- Reporte Bimestral -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Reporte Bimestral"
+                  v-on:click="$emit('click', $refs.reporte.click())"
+                  v-model="fileName.reporte"
+                  value="fileName.reporte"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="reporte"
+                    accept=".pdf"
+                    @change="onReporteFilePicked">
+                <!-- Reporte Bimestral Final -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Reporte de Actividades Final"
+                  v-on:click="$emit('click', $refs.reporteFinal.click())"
+                  v-model="fileName.reporteFinal"
+                  value="fileName.reporteFinal"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="reporteFinal"
+                    accept=".pdf"
+                    @change="onReporteFinalFilePicked">
+                <!-- Evaluación de las actividades -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Evaluación de las Actividades."
+                  v-on:click="$emit('click', $refs.evaluacionActividades.click())"
+                  v-model="fileName.evaluacionActividades"
+                  value="fileName.evaluacionActividades"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="evaluacionActividades"
+                    accept=".pdf"
+                    @change="onEvaluacionActividadesFilePicked">
+                <!-- Evaluación Carta de Terminación -->
+                <v-text-field
+                  prepend-icon="attach_file"
+                  label="Carta de Terminación."
+                  v-on:click="$emit('click', $refs.cartaTerminacion.click())"
+                  v-model="fileName.cartaTerminacion"
+                  value="fileName.cartaTerminacion"
+                  :rules="fileRules"
+                  required/>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="cartaTerminacion"
+                    accept=".pdf"
+                    @change="onCartaTerminacionFilePicked">
+                <!-- Validatión Alert -->
+                <v-alert
+                  outline
+                  :value="error"
+                  type="warning">
+                  {{ error }}
+                </v-alert>
+                <!-- Submit Button -->
+                <v-btn v-on:click="submitFiles">
+                  Aceptar
+                  <v-icon right>check_circle</v-icon>
+                </v-btn>
               </v-container>
             </v-form>
           </div>
@@ -73,6 +175,7 @@
 </template>
 
 <script>
+import AuthenticationService from '../../services/AuthenticationService'
 export default {
   data () {
     return {
@@ -111,6 +214,43 @@ export default {
     }
   },
   methods: {
+    async submitFiles () {
+      if (!this.validate()) {
+        this.error = 'Proporcione la información solicitada.'
+      }
+
+      const formData = new FormData()
+      formData.append('control', this.control)
+      // Files
+      formData.append('evaluacion', this.FILE[this.fileIndex.evaluacion])
+      formData.append('evaluacionFinal', this.FILE[this.fileIndex.evaluacionFinal])
+      formData.append('autoevaluacion', this.FILE[this.fileIndex.autoevaluacion])
+      formData.append('autoevaluacionFinal', this.FILE[this.fileIndex.autoevaluacionFinal])
+      formData.append('reporte', this.FILE[this.fileIndex.reporte])
+      formData.append('reporteFinal', this.FILE[this.fileIndex.reporteFinal])
+      formData.append('evaluacionActividades', this.FILE[this.fileIndex.evaluacionActividades])
+      formData.append('cartaTerminacion', this.FILE[this.fileIndex.cartaTerminacion])
+
+      try {
+        const response = await AuthenticationService.final(
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+        // this.$router.push('/home')
+        console.log(response.data.message)
+      } catch (err) {
+        this.err = err.response.data.error
+      }
+    },
+    validate () {
+      if (this.$refs.form.validate()) {
+        this.snackbar = true
+      }
+    },
     onEvaluacionFilePicked (e) {
       const files = e.target.files
       if (files[0] !== undefined) {
@@ -141,7 +281,110 @@ export default {
           this.FILE[this.fileIndex.evaluacionFinal] = files[0]
         })
       } else {
-        this.fileName
+        this.fileName.evaluacionFinal = ''
+        this.FILE[this.fileIndex.evaluacionFinal] = ''
+      }
+    },
+    onAutoevaluacionFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.autoevaluacion = files[0].name
+        if (this.fileName.autoevaluacion.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.autoevaluacion] = files[0]
+        })
+      } else {
+        this.fileName.autoevaluacion = ''
+        this.FILE[this.fileIndex.autoevaluacion] = ''
+      }
+    },
+    onAutoevaluacionFinalFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.autoevaluacionFinal = files[0].name
+        if (this.fileName.autoevaluacionFinal.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.autoevaluacionFinal] = files[0]
+        })
+      } else {
+        this.fileName.autoevaluacionFinal = ''
+        this.FILE[this.fileIndex.autoevaluacionFinal] = ''
+      }
+    },
+    onReporteFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.reporte = files[0].name
+        if (this.fileName.reporte.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.reporte] = files[0]
+        })
+      } else {
+        this.fileName.reporte = ''
+        this.FILE[this.fileIndex.reporte] = ''
+      }
+    },
+    onReporteFinalFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.reporteFinal = files[0].name
+        if (this.fileName.reporteFinal.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.reporteFinal] = files[0]
+        })
+      } else {
+        this.fileName.reporteFinal = ''
+        this.FILE[this.fileIndex.reporteFinal] = ''
+      }
+    },
+    onEvaluacionActividadesFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.evaluacionActividades = files[0].name
+        if (this.fileName.evaluacionActividades.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.evaluacionActividades] = files[0]
+        })
+      } else {
+        this.fileName.evaluacionActividades = ''
+        this.FILE[this.fileIndex.evaluacionActividades] = ''
+      }
+    },
+    onCartaTerminacionFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.fileName.cartaTerminacion = files[0].name
+        if (this.fileName.cartaTerminacion.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          this.FILE[this.fileIndex.cartaTerminacion] = files[0]
+        })
+      } else {
+        this.fileName.cartaTerminacion = ''
+        this.FILE[this.fileIndex.cartaTerminacion] = ''
       }
     }
   }

@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const userRoutes = require('./api/routes/user')
 const servicioRoutes = require('./api/routes/servicio')
 const ReporteRoutes = require('./api/routes/reporte')
+const FinalRoutes = require('./api/routes/final')
 
 mongoose.connect(`mongodb://${process.env.DATABASE_SERVER}/${process.env.DATABASE}`, {useNewUrlParser: true})
 mongoose.Promise = global.Promise // Shuts the deprecation warning
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 app.use('/user', userRoutes)
 app.use('/servicio', servicioRoutes)
 app.use('/reporte', ReporteRoutes)
+app.use('/final', FinalRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Nice try bitch!!')

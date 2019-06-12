@@ -12,5 +12,8 @@ export default {
   },
   reporte (credentials) {
     return Api().post('/reporte', credentials)
+  },
+  final (credentials) {
+    return Api().post('/final', credentials)
   }
 }
