@@ -4,13 +4,17 @@
       <v-flex xs6 offset-xs3>
         <div class="elevation-2">
           <v-toolbar
-            class="cyan darken-2"
-            flat
-            dense
+            class="indigo"
             dark>
             <v-toolbar-title>
               Agregar Servicio Social
             </v-toolbar-title>
+            <v-spacer/>
+            <v-btn
+              to="/home"
+              color="error">Cancelar
+              <!-- <v-icon>close</v-icon> -->
+            </v-btn>
           </v-toolbar>
           <div class="pl-4 pr-4 pt-2 pb-2">
             <v-form
@@ -29,7 +33,7 @@
                   </v-flex>
 
                   <!-- Career -->
-                  <v-flex xs12md6>
+                  <v-flex xs12 md6>
                     <v-select
                       v-model="career"
                       :rules="careerRules"
@@ -139,7 +143,7 @@
                         </v-btn>
                         <v-btn
                           flat
-                          color="primary"
+                          class="pink accent-3"
                           @click="$refs.menu2.save(endDate)">
                           OK
                         </v-btn>
@@ -219,9 +223,11 @@
                 </v-alert>
                 <!-- Submit button -->
                 <v-btn
+                  color="pink"
+                  dark
                   v-on:click="submitFiles">
                   Aceptar
-                  <v-icon right>check_circle</v-icon>
+                  <!-- <v-icon right>check_circle</v-icon> -->
                 </v-btn>
               </v-container>
             </v-form>

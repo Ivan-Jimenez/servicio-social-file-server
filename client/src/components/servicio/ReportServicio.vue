@@ -4,13 +4,17 @@
       <v-flex xs6 offset-xs3>
         <div class="elevation-2">
           <v-toolbar
-            class="cyan darken-2"
-            flat
-            dense
-            dark>
+            dark
+            class="indigo">
             <v-toolbar-title>
-              Reporte Bimestre 2
+              Reporte {{ form }}
             </v-toolbar-title>
+            <v-spacer/>
+            <v-btn
+              to="/home"
+              color="error">Cancelar
+              <!-- <v-icon>close</v-icon> -->
+            </v-btn>
           </v-toolbar>
           <div class="pl-4 pr-4 pt-2 pb-2">
             <v-form
@@ -82,9 +86,11 @@
                 </v-alert>
                 <!-- Submit button -->
                 <v-btn
+                  dark
+                  color="pink"
                   v-on:click="submitFiles">
                     Aceptar
-                    <v-icon right>check_circle</v-icon>
+                    <!-- <v-icon right>check_circle</v-icon> -->
                   </v-btn>
               </v-container>
             </v-form>
@@ -98,6 +104,7 @@
 <script>
 import AuthenticationService from '../../services/AuthenticationService'
 export default {
+  props: ['form'],
   data () {
     return {
       // Fields validation
@@ -132,6 +139,7 @@ export default {
 
       const formData = new FormData()
       formData.append('control', this.control)
+      formData.append('documents', this.form)
       // Files
       formData.append('reporte', this.FILE[this.fileIndex.reporte])
       formData.append('evaluacion', this.FILE[this.fileIndex.evaluacion])

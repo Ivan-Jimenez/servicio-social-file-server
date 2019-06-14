@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
-const FinalController = require('../controllers/final')
+const FinalDocumentsController = require('../../controllers/final-documents')
 
 const storage = multer.diskStorage({
   destination: (req, res, callback) => {
@@ -39,6 +39,15 @@ const uploadFile = multer({
 ])
 
 /** New final report */
-router.post('/', uploadFile, FinalController.final_new)
+router.post('/', uploadFile, FinalDocumentsController.new)
+
+/** Fetch final documents */
+router.get('/:servicioId', FinalDocumentsController.getOne)
+
+/** Fetch all final documents */
+router.get('/', FinalDocumentsController.getAll)
+
+/** Delete final documents */
+router.delete('/:servicioId', FinalDocumentsController.deleteOne)
 
 module.exports = router

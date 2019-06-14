@@ -8,9 +8,7 @@
         <div
           class="elevation-2">
           <v-toolbar
-            class="cyan darken-2"
-            flat
-            dense
+            class="indigo"
             dark>
             <v-toolbar-title>
               Entrar
@@ -34,11 +32,13 @@
               {{ error }}
             </v-alert>
             <v-btn
+              dark
+              color="pink"
               @click="login">
               Aceptar
-              <v-icon right>
+              <!-- <v-icon right>
                 check_circle
-              </v-icon>
+              </v-icon> -->
             </v-btn>
           </div>
         </div>

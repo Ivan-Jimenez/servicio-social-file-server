@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
-const BimesterTwoReport = require('../models/servicio/documents/BimesterTwoReport')
+const ServicioDocuments = require('../models/servicio/ServicioDocuments')
 const Servicio = require('../models/servicio/Servicio')
 
-exports.report_new = (req, res, next) => {
+exports.new = (req, res, next) => {
   Servicio.find({ control: req.body.control })
     .exec()
     .then(servicio => {
@@ -12,7 +12,7 @@ exports.report_new = (req, res, next) => {
           error: 'El alumno no se encuentra registrado al Servicio Social.'
         })
       } else {
-        saveFiles(servicio[0]._id, req.files, res)
+        saveFiles(servicio[0]._id, req.files, req.body.documents, res)
       }
     })
     .catch(err => {
@@ -23,8 +23,12 @@ exports.report_new = (req, res, next) => {
     })
 }
 
-exports.report_documents_get_one = (req, res, next) => {
-  BimesterTwoReport.find({ servicio: req.params.servicioId })
+exports.getOne = (req, res, next) => {
+  ServicioDocuments
+    .find({
+      servicio: req.params.servicioId,
+      documents: req.body.documents
+    })
     .exec()
     .then(docs => {
       const response = {
@@ -33,6 +37,7 @@ exports.report_documents_get_one = (req, res, next) => {
           return {
             _id: doc._id,
             servicio: doc.servicio,
+            documents: doc.documents,
             path: doc.path
           }
         })
@@ -47,8 +52,8 @@ exports.report_documents_get_one = (req, res, next) => {
     })
 }
 
-exports.report_documents_get_all = (req, res, next) => {
-  BimesterTwoReport.find()
+exports.getAll = (req, res, next) => {
+  ServicioDocuments.find()
     .select('_id servicio path')
     .exec()
     .then(docs => {
@@ -58,6 +63,7 @@ exports.report_documents_get_all = (req, res, next) => {
           return {
             _Id: doc._id,
             servicio: doc.servicio,
+            documents: doc.documents,
             path: doc.path
           }
         })
@@ -71,8 +77,12 @@ exports.report_documents_get_all = (req, res, next) => {
     })
 }
 
-exports.report_documents_delete_one = (req, res, next) => {
-  BimesterTwoReport.remove({ servicio: req.params.servicioId })
+exports.deleteOne = (req, res, next) => {
+  ServicioDocuments
+    .remove({
+      servicioId: req.params.servicioId,
+      documents: req.params.documents
+    })
     .exec()
     .then(result => {
       console.log(result)
@@ -88,25 +98,28 @@ exports.report_documents_delete_one = (req, res, next) => {
     })
 }
 
-/******************************************************************************* 
- ****************************** Util Functions ********************************* 
+/*******************************************************************************
+ ****************************** Util Functions *********************************
 *******************************************************************************/
 
-function saveFiles (servicioId, files, res) {
-  BimesterTwoReport.insertMany([
+function saveFiles (servicioId, files, documents, res) {
+  ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: documents,
       path: files.reporte[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: documents,
       path: files.evaluacion[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: documents,
       path: files.autoevaluacion[0].path
     }
   ])

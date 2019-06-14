@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
-const ServicioController = require('../controllers/servicio')
+const ServicioController = require('../../controllers/servicio')
 
 const storage = multer.diskStorage({
   destination: function (req, res, callback) {
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = function (req, file, callback) {
   const ext = file.originalname.lastIndexOf('.')
-  const fext = (ext < 1) ? '' : file.originalname.substr(ext + 1) 
+  const fext = (ext < 1) ? '' : file.originalname.substr(ext + 1)
   if (fext !== 'pdf') {
     return callback(null, false)
   }
@@ -34,21 +34,21 @@ const uploadFile = multer({
 ])
 
 /** Fetch all Servicio Social */
-router.get('/', ServicioController.servicio_get_all)
+router.get('/', ServicioController.getAll)
 
 /** Fetch initial documents */
-router.get('/initialDocuments/:servicioId', ServicioController.initial_documents_get_one)
+router.get('/initialDocuments/:servicioId', ServicioController.initialDocumentsGetOne)
 
 /** Fetch all inital documents */
-router.get('/initialDocuments/', ServicioController.initial_documents_get_all)
+router.get('/initialDocuments/', ServicioController.initialDocumentsGetAll)
 
 /** Delete Initial Documents */
-router.delete('/initialDocuments/:servicioId', ServicioController.initial_documents_delete_one)
+router.delete('/initialDocuments/:servicioId', ServicioController.initialDocumentsDeleteOne)
 
 /** Delete Servicio Social */
-router.delete('/delete/:servicioId', ServicioController.servicio_delete_one)
+router.delete('/delete/:servicioId', ServicioController.deleteOne)
 
 /** New Servicio Social */
-router.post('/', uploadFile, ServicioController.servicio_new)
+router.post('/', uploadFile, ServicioController.new)
 
 module.exports = router

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const Servicio = require('../models/servicio/Servicio')
-const InitialDocuments = require('../models/servicio/documents/InitialDocuments')
+const ServicioDocuments = require('../models/servicio/ServicioDocuments')
 
-exports.servicio_get_all = (req, res, next) => {
+exports.getAll = (req, res, next) => {
   Servicio.find()
     .select('_id control name lastName startDate endDate')
     .exec()
@@ -36,8 +36,8 @@ exports.servicio_get_all = (req, res, next) => {
     })
 }
 
-exports.initial_documents_get_one = (req, res, next) => {
-  InitialDocuments.find({ servicio: req.params.servicioId })
+exports.initialDocumentsGetOne = (req, res, next) => {
+  ServicioDocuments.find({ servicio: req.params.servicioId, documents: 'Iniciales' })
     .exec()
     .then(docs => {
       const response = {
@@ -46,6 +46,7 @@ exports.initial_documents_get_one = (req, res, next) => {
           return {
             _id     : doc._id,
             servicio: doc.servicio,
+            documents: doc.documents,
             path    : doc.path
           }
         })
@@ -60,8 +61,8 @@ exports.initial_documents_get_one = (req, res, next) => {
     })
 }
 
-exports.initial_documents_get_all = (req, res, next) => {
-  InitialDocuments.find()
+exports.initialDocumentsGetAll = (req, res, next) => {
+  ServicioDocuments.find({ documents: 'Iniciales' })
     .select('_id servicio path')
     .exec()
     .then(docs => {
@@ -71,6 +72,7 @@ exports.initial_documents_get_all = (req, res, next) => {
           return {
             _id     : doc._id,
             servicio: doc.servicio,
+            documents: doc.documents,
             path    : doc.path
           }
         })
@@ -85,8 +87,12 @@ exports.initial_documents_get_all = (req, res, next) => {
     })
 }
 
-exports.initial_documents_delete_one = (req, res, next) => {
-  InitialDocuments.remove({ servicio: req.params.servicioId })
+exports.initialDocumentsDeleteOne = (req, res, next) => {
+  ServicioDocuments
+    .remove({
+      servicio: req.params.servicioId,
+      documents: 'Iniciales'
+    })
     .exec()
     .then(result => {
       console.log(result)
@@ -102,7 +108,9 @@ exports.initial_documents_delete_one = (req, res, next) => {
     })
 }
 
-exports.servicio_delete_one = (req, res, next) => {
+
+// TODO: Delete the documents
+exports.deleteOne = (req, res, next) => {
   Servicio.remove({ _id: req.params.servicioId })
     .exec()
     .then(result => {
@@ -118,7 +126,7 @@ exports.servicio_delete_one = (req, res, next) => {
     })
 }
 
-exports.servicio_new = (req, res, next) => {
+exports.new = (req, res, next) => {
   // TODO: Delete Servicio Social of there is an error storing the files.
   const servicioId = new mongoose.Types.ObjectId()
   console.log(servicioId)
@@ -168,25 +176,29 @@ exports.servicio_new = (req, res, next) => {
 
 // TODO: Find a better solution for this. However this works for now.
 function saveFiles (servicioId, files, res) {
-  InitialDocuments.insertMany([
+  ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: 'Iniciales',
       path: files.solicitud[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: 'Iniciales',
       path: files.planTrabajo[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: 'Iniciales',
       path: files.cartaCompromiso[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       servicio: servicioId,
+      documents: 'Iniciales',
       path: files.cartaAsignacion[0].path
     }
   ])

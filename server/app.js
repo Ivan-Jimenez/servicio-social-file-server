@@ -6,9 +6,9 @@ const mongoose = require('mongoose')
 
 // Routes
 const userRoutes = require('./api/routes/user')
-const servicioRoutes = require('./api/routes/servicio')
-const ReporteRoutes = require('./api/routes/reporte')
-const FinalRoutes = require('./api/routes/final')
+const servicioRoutes = require('./api/routes/servicio/servicio')
+const ReporteRoutes = require('./api/routes/servicio/bimester-report')
+const FinalRoutes = require('./api/routes/servicio/final-documents')
 
 mongoose.connect(`mongodb://${process.env.DATABASE_SERVER}/${process.env.DATABASE}`, {useNewUrlParser: true})
 mongoose.Promise = global.Promise // Shuts the deprecation warning
@@ -54,4 +54,4 @@ app.use((error, req, next) => {
   })
 })
 
-module.exports = app 
+module.exports = app

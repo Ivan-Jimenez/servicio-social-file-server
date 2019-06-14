@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
-const ReporteController = require('../controllers/reporte')
+const BimesterReportController = require('../../controllers/bimester-report')
 
 const storage = multer.diskStorage({
   destination: function (req, res, callback) {
@@ -33,15 +33,15 @@ const uploadFile = multer({
 ])
 
 /** New bimester two report */
-router.post('/', uploadFile, ReporteController.report_new)
+router.post('/', uploadFile, BimesterReportController.new)
 
-/** Fetch report two documents */
-router.get('/:servicioId', ReporteController.report_documents_get_one)
+/** Fetch bimester documents */
+router.get('/:servicioId', BimesterReportController.getOne)
 
-/** Fetch all report two documents */
-router.get('/', ReporteController.report_documents_get_all)
+/** Fetch all bimester documents */
+router.get('/', BimesterReportController.getAll)
 
-/** Delete report two documents */
-router.delete('/:servicioId', ReporteController.report_documents_delete_one)
+/** Delete bimester documents */
+router.delete('/:servicioId', BimesterReportController.deleteOne)
 
 module.exports = router

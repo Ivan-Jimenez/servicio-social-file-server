@@ -8,9 +8,7 @@
         <div
           class="elevation-2">
           <v-toolbar
-            class="cyan darken-2"
-            flat
-            dense
+            class="indigo"
             dark>
             <v-toolbar-title>
               Nuevo Usuario
@@ -23,9 +21,7 @@
               lazy-validation>
               <v-container>
                 <v-layout>
-                  <v-flex
-                    xs12
-                    md6>
+                  <v-flex xs12 md6>
                     <v-text-field
                       v-model="name"
                       :rules="nameRules"
@@ -68,11 +64,13 @@
                   {{ error }}
                 </v-alert>
                 <v-btn
+                  dark
+                  color="pink"
                   @click="register">
                   Aceptar
-                  <v-icon right>
+                  <!-- <v-icon right>
                     check_circle
-                  </v-icon>
+                  </v-icon> -->
                 </v-btn>
               </v-container>
             </v-form>

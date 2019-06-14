@@ -1,26 +1,31 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Login from '@/components/Login'
-import Signup from '@/components/Signup'
-import Servicio from '@/components/servicio/NewServicio'
-import ServicioReportTwo from '@/components/servicio/ServicioReportTwo'
-import ServicioReportFinal from '@/components/servicio/ServicioReportFinal'
-
-import UploadFileTest from '@/components/UploadFileTest'
+import Login from '@/components/user/Login'
+import Signup from '@/components/user/Signup'
+import NewServicio from '@/components/servicio/NewServicio'
+import ReportServicio from '@/components/servicio/ReportServicio'
+import FinalServicio from '@/components/servicio/FinalServicio'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/',
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/home',
       name: 'home',
       component: Home
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      props: true
     },
     {
       path: '/signup',
@@ -30,22 +35,19 @@ export default new Router({
     {
       path: '/servicio',
       name: 'servicio',
-      component: Servicio
+      component: NewServicio
     },
     {
-      path: '/report',
+      path: '/report/:form',
       name: 'report',
-      component: ServicioReportTwo
+      component: ReportServicio,
+      props: true
     },
     {
       path: '/final',
       name: 'final',
-      component: ServicioReportFinal
-    },
-    {
-      path: '/upload',
-      name: 'upload',
-      component: UploadFileTest
+      component: FinalServicio,
+      props: true
     }
   ]
 })
