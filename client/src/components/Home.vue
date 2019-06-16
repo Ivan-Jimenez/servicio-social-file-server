@@ -24,7 +24,9 @@
         <td class="text-xs-left">{{ props.item.career }}</td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.programName }}</td>
-        <td class="text-xs-left">{{ props.item.status }}</td>
+        <td class="text-xs-left">{{ props.item.startDate }}</td>
+        <td class="text-xs-left">{{ props.item.endDate }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.status }}</td> -->
       </template>
       <template v-slot:no-results>
         <v-alert
@@ -38,7 +40,26 @@
 </template>
 
 <script>
+import AuthenticationService from '../services/AuthenticationService'
 export default {
+  async created () {
+    try {
+      const response = await AuthenticationService.servicioFetchAll()
+      console.log(response.data.servicios)
+      response.data.servicios.forEach(servicio => {
+        this.students.push({
+          control: servicio.control,
+          career: servicio.career,
+          name: `${servicio.name} ${servicio.lastName}`,
+          programName: servicio.programName,
+          startDate: servicio.startDate.split('T')[0],
+          endDate: servicio.endDate.split('T')[0]
+        })
+      })
+    } catch (err) {
+      console.log(err.response.data.error)
+    }
+  },
   data () {
     return {
       dropdownCategory: ['Servicio Social', 'Residencias', 'Tesis'],
@@ -53,31 +74,11 @@ export default {
         { text: 'Carrera', value: 'career' },
         { text: 'Nombre', value: 'name' },
         { text: 'Nombre del Programa', value: 'programName' },
-        { text: 'Estado', value: 'status' }
+        { text: 'Inicio', value: 'startDate' },
+        { text: 'Termino', value: 'endDate' }
+        // { text: 'Estado', value: 'status' }
       ],
-      students: [
-        {
-          control: 14550332,
-          career: 'Ing. en Sistemas',
-          name: 'Iván Jiménez',
-          programName: 'Clúster para la DEPI',
-          status: 'Activo'
-        },
-        {
-          control: 19550332,
-          career: 'Ing. en Sistemas',
-          name: 'Alexis',
-          programName: 'Clúster para la DEPI',
-          status: 'Activo'
-        },
-        {
-          control: 20550332,
-          career: 'Ing. en Sistemas',
-          name: 'Adrián',
-          programName: 'Clúster para la DEPI',
-          status: 'Activo'
-        }
-      ]
+      students: []
     }
   }
 }

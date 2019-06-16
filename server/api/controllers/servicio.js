@@ -5,7 +5,17 @@ const ServicioDocuments = require('../models/servicio/ServicioDocuments')
 
 exports.getAll = (req, res, next) => {
   Servicio.find()
-    .select('_id control name lastName startDate endDate')
+    .select(`
+      _id
+      supervisor
+      control
+      career
+      name
+      lastName
+      programName
+      startDate
+      endDate
+    `)
     .exec()
     .then(docs => {
       const response = {
@@ -14,6 +24,7 @@ exports.getAll = (req, res, next) => {
           return {
             _id      : doc._id,
             control  : doc.control,
+            career   : doc.career,
             name     : doc.name,
             lastName : doc.lastName,
             programName: doc.programName,
@@ -127,10 +138,10 @@ exports.deleteOne = (req, res, next) => {
 }
 
 exports.new = (req, res, next) => {
+  console.log('MOTHER FUCKER ========================>')
+  console.log(req.body)
   // TODO: Delete Servicio Social of there is an error storing the files.
   const servicioId = new mongoose.Types.ObjectId()
-  console.log(servicioId)
-  console.log(req.files.solicitud)
 
   Servicio.find({ control: req.body.control })
     .exec()

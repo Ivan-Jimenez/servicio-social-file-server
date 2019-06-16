@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
+const checkAuth = require('../../middleware/check-auth')
+
 const BimesterReportController = require('../../controllers/bimester-report')
 
 const storage = multer.diskStorage({
@@ -33,15 +35,15 @@ const uploadFile = multer({
 ])
 
 /** New bimester two report */
-router.post('/', uploadFile, BimesterReportController.new)
+router.post('/', checkAuth, uploadFile, BimesterReportController.new)
 
 /** Fetch bimester documents */
-router.get('/:servicioId', BimesterReportController.getOne)
+router.get('/:servicioId', checkAuth, BimesterReportController.getOne)
 
 /** Fetch all bimester documents */
-router.get('/', BimesterReportController.getAll)
+router.get('/', checkAuth, BimesterReportController.getAll)
 
 /** Delete bimester documents */
-router.delete('/:servicioId', BimesterReportController.deleteOne)
+router.delete('/:servicioId', checkAuth, BimesterReportController.deleteOne)
 
 module.exports = router

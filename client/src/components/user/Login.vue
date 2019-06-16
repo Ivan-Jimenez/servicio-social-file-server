@@ -1,21 +1,14 @@
 <template>
-  <v-layout
-    column>
+  <v-layout column>
     <v-flex>
-      <v-flex
-        xs6
-        offset-xs3>
-        <div
-          class="elevation-2">
-          <v-toolbar
-            class="indigo"
-            dark>
+      <v-flex xs6 offset-xs3>
+        <div class="elevation-2">
+          <v-toolbar class="indigo" dark>
             <v-toolbar-title>
               Entrar
             </v-toolbar-title>
           </v-toolbar>
-          <div
-            class="pl-4 pr-4 pt-2 pb-2">
+          <div class="pl-4 pr-4 pt-2 pb-2">
             <v-text-field
               label="Correo Electrónico"
               v-model="email"/>

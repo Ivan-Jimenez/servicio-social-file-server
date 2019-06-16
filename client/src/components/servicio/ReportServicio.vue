@@ -150,7 +150,8 @@ export default {
           formData,
           {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'multipart/form-data',
+              'Authorization': ' Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDAxZDNhZmI5YTg0ODA0MjA2YmRiZDAiLCJuYW1lIjoiSXZhbiAiLCJsYXN0TmFtZSI6IkNhc3RybyIsImVtYWlsIjoiaXZhbkBtYWlsLmNvbSIsImlhdCI6MTU2MDU5NTA4OSwiZXhwIjoxNTYwNTk4Njg5fQ.oQFysXKJPBIgKrGqzh0kH58rPKd8RiKPv_I-Wv5gXqk'
             }
           }
         )

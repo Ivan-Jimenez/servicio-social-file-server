@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
+const checkAuth = require('../../middleware/check-auth')
+
 const ServicioController = require('../../controllers/servicio')
 
 const storage = multer.diskStorage({
@@ -34,7 +36,7 @@ const uploadFile = multer({
 ])
 
 /** Fetch all Servicio Social */
-router.get('/', ServicioController.getAll)
+router.get('/', checkAuth, ServicioController.getAll)
 
 /** Fetch initial documents */
 router.get('/initialDocuments/:servicioId', ServicioController.initialDocumentsGetOne)
