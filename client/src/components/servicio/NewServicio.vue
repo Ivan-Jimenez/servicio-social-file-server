@@ -239,8 +239,10 @@
 </template>
 
 <script>
-import AuthenticationService from '../../services/AuthenticationService'
+import { mapActions } from 'vuex'
+
 export default {
+  name: 'new-servicio',
   data () {
     return {
       // Fields validation
@@ -290,7 +292,8 @@ export default {
     }
   },
   methods: {
-    async submitFiles () {
+    ...mapActions(['addServicio']),
+    submitFiles () {
       if (!this.validate()) {
         this.error = 'Proporcione la información solicitada!'
       }
@@ -308,20 +311,21 @@ export default {
       formData.append('planTrabajo', this.FILE[this.fileIndex.planTrabajo])
       formData.append('cartaCompromiso', this.FILE[this.fileIndex.cartaCompromiso])
       formData.append('cartaAsignacion', this.FILE[this.fileIndex.cartaAsignacion])
-      try {
-        const response = await AuthenticationService.servicio(
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
-        this.$router.push('/home')
-        console.log(response.data.message)
-      } catch (err) {
-        this.error = err.response.data.error
-      }
+      this.addServicio(this.formData)
+      // try {
+      //   const response = await AuthenticationService.servicio(
+      //     formData,
+      //     {
+      //       headers: {
+      //         'Content-Type': 'multipart/form-data'
+      //       }
+      //     }
+      //   )
+      //   this.$router.push('/home')
+      //   console.log(response.data.message)
+      // } catch (err) {
+      //   this.error = err.response.data.error
+      // }
     },
     // TODO: Find a better way to manage the file pick.
     onSolicitudFilePicked (e) {

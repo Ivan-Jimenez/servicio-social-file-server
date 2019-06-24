@@ -36,7 +36,7 @@ const uploadFile = multer({
 ])
 
 /** Fetch all Servicio Social */
-router.get('/', checkAuth, ServicioController.getAll)
+router.get('/', ServicioController.getAll)
 
 /** Fetch initial documents */
 router.get('/initialDocuments/:servicioId', ServicioController.initialDocumentsGetOne)

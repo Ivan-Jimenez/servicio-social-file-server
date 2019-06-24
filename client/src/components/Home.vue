@@ -26,7 +26,7 @@
         <td class="text-xs-left">{{ props.item.programName }}</td>
         <td class="text-xs-left">{{ props.item.startDate }}</td>
         <td class="text-xs-left">{{ props.item.endDate }}</td>
-        <!-- <td class="text-xs-left">{{ props.item.status }}</td> -->
+        <td class="text-xs-left">{{ props.item.status }}</td>
       </template>
       <template v-slot:no-results>
         <v-alert
@@ -40,25 +40,44 @@
 </template>
 
 <script>
-import AuthenticationService from '../services/AuthenticationService'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  async created () {
-    try {
-      const response = await AuthenticationService.servicioFetchAll()
-      console.log(response.data.servicios)
-      response.data.servicios.forEach(servicio => {
-        this.students.push({
-          control: servicio.control,
-          career: servicio.career,
-          name: `${servicio.name} ${servicio.lastName}`,
-          programName: servicio.programName,
-          startDate: servicio.startDate.split('T')[0],
-          endDate: servicio.endDate.split('T')[0]
-        })
-      })
-    } catch (err) {
-      console.log(err.response.data.error)
-    }
+  name: 'home',
+  methods: {
+    ...mapActions(['fetchServicios']),
+    ...mapGetters(['allServicios'])
+  },
+  computed: mapGetters(['allServicios']),
+  created () {
+    this.fetchServicios()
+    // console.log(this.allServicios())
+    // this.allServicios[0].servicios.forEach(servico => {
+    //   this.students.push({
+    //     control: servicio.control,
+    //     career: servicio.career,
+    //     name: `${servicio.name} ${servicio.lastName}`,
+    //     programName: servicio.programName,
+    //     startDate: servicio.startDate.split('T')[0],
+    //     endDate: servicio.endDate.split('T')[0]
+    //   })
+    // })
+    // try {
+    //   const response = await AuthenticationService.servicioFetchAll()
+    //   console.log(response.data.servicios)
+    //   response.data.servicios.forEach(servicio => {
+    //     this.students.push({
+    //       control: servicio.control,
+    //       career: servicio.career,
+    //       name: `${servicio.name} ${servicio.lastName}`,
+    //       programName: servicio.programName,
+    //       startDate: servicio.startDate.split('T')[0],
+    //       endDate: servicio.endDate.split('T')[0]
+    //     })
+    //   })
+    // } catch (err) {
+    //   console.log(err.response.data.error)
+    // }
   },
   data () {
     return {

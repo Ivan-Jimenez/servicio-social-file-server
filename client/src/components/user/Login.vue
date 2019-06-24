@@ -43,6 +43,7 @@
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
 export default {
+  name: 'login',
   data () {
     return {
       email: '',
@@ -52,17 +53,14 @@ export default {
   },
   methods: {
     async login () {
-      try {
-        const response = await AuthenticationService.login({
-          email: this.email,
-          password: this.password
+      let email = this.email
+      let password = this.password
+      this.$store.dispatch('login', { email, password })
+        .then(() => this.$router.push('/'))
+        .catch(err => {
+          console.log(err)
+          this.error = err
         })
-        this.$router.push('/home')
-        // TODO: Find out how to storage the token.
-        console.log({token: response.data.token})
-      } catch (err) {
-        this.error = err.response.data.error
-      }
     }
   }
 }

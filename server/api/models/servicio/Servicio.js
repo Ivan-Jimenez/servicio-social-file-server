@@ -9,7 +9,7 @@ const servicioSchema = mongoose.Schema({
   lastName  : { type: String, require: true },
   programName: { type: String, require: true },
   startDate : { type: Date,   require: true },
-  endDate   : { type: Date,   require: true }
+ 	endDate   : { type: Date,   require: true }
 })
 
 module.exports =  mongoose.model('Servicio', servicioSchema)

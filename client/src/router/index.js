@@ -7,14 +7,20 @@ import NewServicio from '@/components/servicio/NewServicio'
 import ReportServicio from '@/components/servicio/ReportServicio'
 import FinalServicio from '@/components/servicio/FinalServicio'
 
+import store from '../storage'
+
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
+  mode: 'history',
   routes: [
     {
-      path: '/home',
+      path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',
@@ -46,3 +52,17 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next()
+  }
+})
+
+export default router
