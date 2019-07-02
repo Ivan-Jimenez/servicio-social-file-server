@@ -4,7 +4,7 @@ const multer = require('multer')
 
 const checkAuth = require('../../middleware/check-auth')
 
-const BimesterReportController = require('../../controllers/bimester-report')
+const BimesterReportController = require('../../controllers/servicio/bimester-report')
 
 const storage = multer.diskStorage({
   destination: function (req, res, callback) {

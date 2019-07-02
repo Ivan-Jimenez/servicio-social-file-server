@@ -1,51 +1,8 @@
 const mongoose = require('mongoose')
 
-const Servicio = require('../models/servicio/Servicio')
-const ServicioDocuments = require('../models/servicio/ServicioDocuments')
+const Servicio = require('../../models/servicio/Servicio')
+const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 
-exports.getAll = (req, res, next) => {
-  Servicio.find()
-    .select(`
-      _id
-      supervisor
-      control
-      career
-      name
-      lastName
-      programName
-      startDate
-      endDate
-    `)
-    .exec()
-    .then(docs => {
-      const response = {
-        count: docs.length,
-        servicios: docs.map(doc => {
-          return {
-            _id      : doc._id,
-            control  : doc.control,
-            career   : doc.career,
-            name     : doc.name,
-            lastName : doc.lastName,
-            programName: doc.programName,
-            startDate: doc.startDate,
-            endDate  : doc.endDate,
-            request  : {
-              type: 'GET',
-              url : `http://${process.env.SERVER}:${process.env.PORT}/servicio/${doc._id}`
-            }
-          }
-        })
-    }
-      res.status(200).json(response)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        error: err
-      })
-    })
-}
 
 exports.initialDocumentsGetOne = (req, res, next) => {
   ServicioDocuments.find({ servicio: req.params.servicioId, documents: 'Iniciales' })

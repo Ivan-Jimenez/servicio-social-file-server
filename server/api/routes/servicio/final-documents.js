@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
-const FinalDocumentsController = require('../../controllers/final-documents')
+const FinalDocumentsController = require('../../controllers/servicio/final-documents')
 
 const storage = multer.diskStorage({
   destination: (req, res, callback) => {

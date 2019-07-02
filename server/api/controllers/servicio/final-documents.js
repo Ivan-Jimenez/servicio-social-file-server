@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-const ServicioDocuments = require('../models/servicio/ServicioDocuments')
-const Servicio = require('../models/servicio/Servicio')
+const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
+const Servicio = require('../../models/servicio/Servicio')
 
 exports.new = (req, res, next) => {
   Servicio.find({ control: req.body.control })
