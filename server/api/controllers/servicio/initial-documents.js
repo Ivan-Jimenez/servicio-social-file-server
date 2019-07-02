@@ -9,13 +9,13 @@ exports.initialDocumentsGetOne = (req, res, next) => {
     .exec()
     .then(docs => {
       const response = {
-        count: docs.length,
+        // count: docs.length,
         initialDocuments: docs.map(doc => {
           return {
-            _id     : doc._id,
+            _id : doc._id,
             servicio: doc.servicio,
             documents: doc.documents,
-            path    : doc.path
+            path : doc.path
           }
         })
       }

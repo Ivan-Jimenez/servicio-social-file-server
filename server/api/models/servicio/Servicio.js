@@ -1,15 +1,41 @@
 const mongoose = require('mongoose')
 
 const servicioSchema = mongoose.Schema({
-  _id       : mongoose.Schema.Types.ObjectId,
-  supervisor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: true },
-  control   : { type: Number, require: true, unique: true },
-  career    : { type: String, require: true },
-  name      : { type: String, require: true },
-  lastName  : { type: String, require: true },
-  programName: { type: String, require: true },
-  startDate : { type: Date,   require: true },
- 	endDate   : { type: Date,   require: true }
+  _id: mongoose.Schema.Types.ObjectId,
+  supervisor: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User',
+    required: true
+  },
+  control: {
+    type: Number,
+    required: true,
+    unique: true 
+  },
+  career: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  lastName : {
+    type: String,
+    required: true
+  },
+  programName: {
+    type: String,
+    required: true
+  },
+  startDate: {
+    type: Date,
+    required: true
+  },
+ 	endDate: {
+     type: Date,
+     required: true
+  }
 })
 
 module.exports =  mongoose.model('Servicio', servicioSchema)

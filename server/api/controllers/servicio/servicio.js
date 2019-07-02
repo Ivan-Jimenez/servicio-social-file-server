@@ -2,9 +2,17 @@ const mongoose = require('mongoose')
 
 const Servicio = require('../../models/servicio/Servicio')
 
-/** New Servicio Social */
+/** New */
 exports.new = (req, res, next) => {
-  // FIXME: Don't save if a field is null.
+  console.log({
+    control : req.body.control,
+    career : req.body.career,
+    name : req.body.name,
+    lastName : req.body.lastName,
+    programName: req.body.programName,
+    startDate: req.body.startDate,
+    endDate : req.body.endDate
+  })
   const servicioId = new mongoose.Types.ObjectId()
   Servicio.find({ control: req.body.control })
     .exec()
@@ -15,14 +23,14 @@ exports.new = (req, res, next) => {
         })
       }
       const newServicio = new Servicio({
-        _id      : servicioId,
-        control  : req.body.control,
-        career   : req.body.career,
-        name     : req.body.name,
+        _id: servicioId,
+        control : req.body.control,
+        career : req.body.career,
+        name : req.body.name,
         lastName : req.body.lastName,
         programName: req.body.programName,
         startDate: req.body.startDate,
-        endDate  : req.body.endDate
+        endDate : req.body.endDate
       })
       newServicio.save()
         .then(result => {
@@ -33,9 +41,15 @@ exports.new = (req, res, next) => {
         })
         .catch(err => {
           console.log(err)
-          return res.status(500).json({
-            error: err
-          })
+          if (err.name === 'ValidationError') {
+            res.status(400).json({
+              error: 'Operación fallida. Datos incompletos!'
+            })
+          } else {
+            res.status(500).json({
+              error: err
+            })
+          }
         })
     })
     .catch(err => {
@@ -46,7 +60,7 @@ exports.new = (req, res, next) => {
     })
 }
 
-// TODO: Delete the documents
+// TODO: Delete the documents from db and disk.
 exports.deleteOne = (req, res, next) => {
   Servicio.remove({ _id: req.params.servicioId })
     .exec()
@@ -63,7 +77,7 @@ exports.deleteOne = (req, res, next) => {
     })
 }
 
-/** Get all Servicio Social */
+/** Get All */
 exports.getAll = (req, res, next) => {
   Servicio.find()
     .select(`
@@ -83,21 +97,58 @@ exports.getAll = (req, res, next) => {
         count: docs.length,
         servicios: docs.map(doc => {
           return {
-            _id      : doc._id,
-            control  : doc.control,
-            career   : doc.career,
-            name     : doc.name,
+            _id : doc._id,
+            supervisor: doc.supervisor,
+            control : doc.control,
+            career : doc.career,
+            name : doc.name,
             lastName : doc.lastName,
             programName: doc.programName,
             startDate: doc.startDate,
-            endDate  : doc.endDate,
-            request  : {
+            endDate : doc.endDate,
+            request : {
               type: 'GET',
               url : `http://${process.env.SERVER}:${process.env.PORT}/servicio/${doc._id}`
             }
           }
         })
     }
+      res.status(200).json(response)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
+}
+
+/** Update */
+exports.update = (req, res, next) => {
+  res.status(200).json({
+    message: 'Not done yet!'
+  })
+}
+
+/** Get One */
+exports.getOne = (req, res, next) => {
+  Servicio.find({ _id: req.params.servicioId })
+    .exec()
+    .then(docs => {
+      const response = docs.map(doc => {
+        return {
+          _id: doc._id,
+            supervisor: doc.supervisor,
+            control: doc.control,
+            career: doc.career,
+            name: doc.name,
+            lastName: doc.lastName,
+            programName: doc.programName,
+            startDate: doc.startDate,
+            endDate: doc.endDate
+        }
+      })
+      console.log(response)
       res.status(200).json(response)
     })
     .catch(err => {
