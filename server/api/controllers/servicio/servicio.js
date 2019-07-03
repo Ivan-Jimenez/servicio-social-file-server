@@ -4,15 +4,7 @@ const Servicio = require('../../models/servicio/Servicio')
 
 /** New */
 exports.new = (req, res, next) => {
-  console.log({
-    control : req.body.control,
-    career : req.body.career,
-    name : req.body.name,
-    lastName : req.body.lastName,
-    programName: req.body.programName,
-    startDate: req.body.startDate,
-    endDate : req.body.endDate
-  })
+  console.log(req.body)
   const servicioId = new mongoose.Types.ObjectId()
   Servicio.find({ control: req.body.control })
     .exec()
@@ -24,6 +16,7 @@ exports.new = (req, res, next) => {
       }
       const newServicio = new Servicio({
         _id: servicioId,
+        supervisor: req.body.supervisor,
         control : req.body.control,
         career : req.body.career,
         name : req.body.name,
@@ -36,14 +29,29 @@ exports.new = (req, res, next) => {
         .then(result => {
           console.log(result)
           res.status(200).json({
-            message: 'Servicio Social registrado!'
+            message: 'Servicio Social registrado!',
+            createdServicio: {
+              _id: result._id,
+              control : result.control,
+              career : result.career,
+              name : result.name,
+              lastName : result.lastName,
+              programName: result.programName,
+              startDate: result.startDate,
+              endDate : result.endDate,
+              request: {
+                type: 'GET',
+                url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/get-one/${result._id}`
+              }
+            }
           })
         })
         .catch(err => {
           console.log(err)
           if (err.name === 'ValidationError') {
             res.status(400).json({
-              error: 'Operación fallida. Datos incompletos!'
+              error: 'Operación fallida. Datos incompletos!',
+              missing: err.errors
             })
           } else {
             res.status(500).json({
@@ -61,6 +69,7 @@ exports.new = (req, res, next) => {
 }
 
 // TODO: Delete the documents from db and disk.
+/** Delete */
 exports.deleteOne = (req, res, next) => {
   Servicio.remove({ _id: req.params.servicioId })
     .exec()

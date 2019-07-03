@@ -94,48 +94,22 @@ exports.deleteOne = (req, res, next) => {
     })
 }
 
+/** New */
 exports.new = (req, res, next) => {
-  console.log('MOTHER FUCKER ========================>')
   console.log(req.body)
-  // TODO: Delete Servicio Social of there is an error storing the files.
-  const servicioId = new mongoose.Types.ObjectId()
-
-  Servicio.find({ control: req.body.control })
+  const servicioId = req.params.servicioId
+  Servicio.find({ _id: servicioId })
     .exec()
     .then(servicio => {
-      if (servicio.length >= 1) {
-        return res.status(409).json({
-          error: 'El alumno ya se encuntra registrado al Servicio Social!'
-        })
-      }
-      const newServicio = new Servicio({
-        _id      : servicioId,
-        control  : req.body.control,
-        career   : req.body.career,
-        name     : req.body.name,
-        lastName : req.body.lastName,
-        programName: req.body.programName,
-        startDate: req.body.startDate,
-        endDate  : req.body.endDate
-      })
-      newServicio.save()
-        .then(result => {
-          console.log(result)
-          saveFiles(servicioId, req.files, res)
-        })
-        .catch(err => {
-          console.log(err)
-          return res.status(500).json({
-            error: err
-          })
-        })
+      console.log(servicio[0])
+      saveFiles(servicio[0]._id, req.files, res)
     })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        error: err
-      })
-    })
+    // .catch(err => {
+    //   console.log(err)
+    //   res.status(500).json({
+    //     error: err
+    //   })
+    // })
 }
 
 /*******************************************************************************
@@ -147,25 +121,25 @@ function saveFiles (servicioId, files, res) {
   ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicioId: servicioId,
       documents: 'Iniciales',
       path: files.solicitud[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicioId: servicioId,
       documents: 'Iniciales',
       path: files.planTrabajo[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicioId: servicioId,
       documents: 'Iniciales',
       path: files.cartaCompromiso[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicioId: servicioId,
       documents: 'Iniciales',
       path: files.cartaAsignacion[0].path
     }
@@ -173,13 +147,29 @@ function saveFiles (servicioId, files, res) {
   .then(result => {
     console.log(result)
     res.status(201).json({
-      message: 'Documentos guardados!'
+      message: 'Documentos Iniciales guardados!',
+      savedDocuments: {
+        servicioId: result.servicioId,
+        documents: result.documents,
+        request: {
+          type: 'GET',
+          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/initial-documents/get/${result[0].servicioId}`
+        }
+      }
     })
   })
   .catch(err => {
     console.log(err)
-    res.status(500).json({
-      error: err
-    })
+    if (err.name === 'ValidationError') {
+      res.status(400).json({
+        error: 'Operación fallida. Datos imcompletos!',
+        missing: err.errors
+      })
+    } else {
+      
+      res.status(500).json({
+        error: err
+      })
+    }
   })
 }

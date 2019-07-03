@@ -24,7 +24,7 @@ const fileFilter = (req, file, callback) => {
   callback(null, true)
 }
 
-const uploadFile = multer({
+const uploadFiles = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: fileFilter
@@ -35,25 +35,17 @@ const uploadFile = multer({
   { name: 'cartaAsignacion' }
 ])
 
-/** Fetch all Servicio Social */
-// router.get('/', InitialDocumentsController.getAll)
+// TODO: Avoid documents duplicity.
+/** New Upload */
+router.post('/upload/:servicioId', uploadFiles, InitialDocumentsController.new)
 
-/** Initial documents upload files */
-router.post('/upload', uploadFile)
+// /** Get */
+// router.get('/get/:servicioId', InitialDocumentsController.initialDocumentsGetOne)
 
-/** Fetch initial documents */
-router.get('/get-one/:servicioId', InitialDocumentsController.initialDocumentsGetOne)
+// /** Get All */
+// router.get('/get-all/', InitialDocumentsController.initialDocumentsGetAll)
 
-/** Fetch all inital documents */
-router.get('/get-all/', InitialDocumentsController.initialDocumentsGetAll)
-
-/** Delete Initial Documents */
-router.delete('/delete-one/:servicioId', InitialDocumentsController.initialDocumentsDeleteOne)
-
-/** Delete Servicio Social */
-// router.delete('/delete/:servicioId', InitialDocumentsController.deleteOne)
-
-/** New Servicio Social */
-// router.post('/', uploadFile, InitialDocumentsController.new)
+// /** Delete */
+// router.delete('/delete-one/:servicioId', InitialDocumentsController.initialDocumentsDeleteOne)
 
 module.exports = router
