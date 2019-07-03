@@ -3,20 +3,19 @@ const router = express.Router()
 
 const ServicioController = require('../../controllers/servicio/servicio')
 
-/** Fetch all Servicio Social */
+/** Get All */
 router.get('/get-all', ServicioController.getAll)
 
-/** Get one Servicio Social */
+/** Get One */
 router.get('/get-one/:servicioId', ServicioController.getOne)
 
-/** Delete Servicio Social */
-router.delete('/delete-one/:servicioId', ServicioController.deleteOne)
+/** Delete */
+router.delete('/delete/:servicioId', ServicioController.deleteOne)
 
-/** New Servicio Social */
+/** New */
 router.post('/new', ServicioController.new)
 
-TODO:
-/** Update Servicio */
-router.post('/update/:servicioId', ServicioController.update)
+/** Update */
+router.patch('/update/:servicioId', ServicioController.update)
 
 module.exports = router

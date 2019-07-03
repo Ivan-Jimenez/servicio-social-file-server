@@ -67,7 +67,20 @@ exports.deleteOne = (req, res, next) => {
     .then(result => {
       console.log(result)
       res.status(200).json({
-        message: 'Servicio Social borrado!'
+        message: 'Servicio Social borrado!',
+        request: {
+          type: 'POST',
+          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/new/`,
+          body: {
+            control: 'Number',
+            career: 'String',
+            name: 'String',
+            lastName: 'String',
+            programName: 'String',
+            startDate: 'Date',
+            endDate: 'Date'
+          }
+        }
       })
     })
     .catch(err => {
@@ -108,7 +121,7 @@ exports.getAll = (req, res, next) => {
             endDate : doc.endDate,
             request : {
               type: 'GET',
-              url : `http://${process.env.SERVER}:${process.env.PORT}/servicio/${doc._id}`
+              url : `http://${process.env.SERVER}:${process.env.PORT}/servicio/get-one/${doc._id}`
             }
           }
         })
@@ -125,9 +138,24 @@ exports.getAll = (req, res, next) => {
 
 /** Update */
 exports.update = (req, res, next) => {
-  res.status(200).json({
-    message: 'Not done yet!'
+  console.log(req.body)
+  const id = req.params.servicioId
+  const updateOps = {}
+  Object.getOwnPropertyNames(req.body).forEach(prop => {
+    updateOps[prop] = req.body[prop]
   })
+  console.log(updateOps)
+  Servicio.updateOne({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: 'Servicio Social actualizado!',
+        request: {
+          type: 'GET',
+          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/update/${id}`
+        }
+      })
+    })
 }
 
 /** Get One */
