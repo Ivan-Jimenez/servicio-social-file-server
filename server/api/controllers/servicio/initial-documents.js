@@ -3,18 +3,18 @@ const mongoose = require('mongoose')
 const Servicio = require('../../models/servicio/Servicio')
 const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 
-
-exports.initialDocumentsGetOne = (req, res, next) => {
-  ServicioDocuments.find({ servicio: req.params.servicioId, documents: 'Iniciales' })
+/** Get One */
+exports.get = (req, res, next) => {
+  ServicioDocuments.find({ servicioId: req.params.servicioId, documentType: 'Inicial' })
     .exec()
     .then(docs => {
       const response = {
-        // count: docs.length,
         initialDocuments: docs.map(doc => {
           return {
             _id : doc._id,
-            servicio: doc.servicio,
-            documents: doc.documents,
+            servicioId: doc.servicioId,
+            documentName: doc.documentName,
+            documentType: doc.documentType,
             path : doc.path
           }
         })
@@ -96,66 +96,93 @@ exports.deleteOne = (req, res, next) => {
 
 /** New */
 exports.new = (req, res, next) => {
-  console.log(req.body)
   const servicioId = req.params.servicioId
   Servicio.find({ _id: servicioId })
     .exec()
     .then(servicio => {
-      console.log(servicio[0])
-      saveFiles(servicio[0]._id, req.files, res)
+      ServicioDocuments.find({ servicioId: servicioId, documentType: 'Inicial' })
+        .exec()
+        .then(documents => {
+          console.log(documents)
+          if (documents.length >= 1) {
+            return res.status(409).json({
+              error: 'Los documentos ya habian sido guardados con anterioridad.'
+            })
+          } else {
+            saveFiles(servicio[0]._id, req.files, res)
+          }
+        })
     })
-    // .catch(err => {
-    //   console.log(err)
-    //   res.status(500).json({
-    //     error: err
-    //   })
-    // })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
 }
 
 /*******************************************************************************
  ************************* Util Fuctions ***************************************
  ******************************************************************************/
 
-// TODO: Find a better solution for this. However this works for now.
+ // TODO: Create a route to get the documents one by one.
+
+/**
+ * 
+ * @param {mongoose.ObjectId} servicioId 
+ * @param {Array} files -> The server recives the documents in the following order:
+ *  1. Solicitud de Servicio Social
+ *  2. Plan de trabajo
+ *  3. Carta Compromiso
+ *  4. Carta Asignación
+ * @param {Response} res 
+ */
 function saveFiles (servicioId, files, res) {
   ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
+      documentName: 'Solicitud de Servicio Social',
       servicioId: servicioId,
-      documents: 'Iniciales',
+      documentType: 'Inicial',
       path: files.solicitud[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
+      documentName: 'Plan de Trabajo',
       servicioId: servicioId,
-      documents: 'Iniciales',
+      documentType: 'Inicial',
       path: files.planTrabajo[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
+      documentName: 'Carta Compromiso',
       servicioId: servicioId,
-      documents: 'Iniciales',
+      documentType: 'Inicial',
       path: files.cartaCompromiso[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
+      documentName: 'Carta Asignación',
       servicioId: servicioId,
-      documents: 'Iniciales',
+      documentType: 'Inicial',
       path: files.cartaAsignacion[0].path
     }
   ])
   .then(result => {
-    console.log(result)
     res.status(201).json({
       message: 'Documentos Iniciales guardados!',
-      savedDocuments: {
-        servicioId: result.servicioId,
-        documents: result.documents,
-        request: {
-          type: 'GET',
-          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/initial-documents/get/${result[0].servicioId}`
+      savedDocuments: result.map(doc => {
+        return {
+          _id: doc._id,
+          servicioId: doc.servicioId,
+          documentName: doc.documentName,
+          documentTyepe: doc.documentType,
+          request: {
+            type: 'GET',
+            url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/initial-documents/get/${doc.servicioId}`
+          }
         }
-      }
+      })
     })
   })
   .catch(err => {

@@ -175,14 +175,14 @@ exports.getOne = (req, res, next) => {
       const response = docs.map(doc => {
         return {
           _id: doc._id,
-            supervisor: doc.supervisor,
-            control: doc.control,
-            career: doc.career,
-            name: doc.name,
-            lastName: doc.lastName,
-            programName: doc.programName,
-            startDate: doc.startDate,
-            endDate: doc.endDate
+          supervisor: doc.supervisor,
+          control: doc.control,
+          career: doc.career,
+          name: doc.name,
+          lastName: doc.lastName,
+          programName: doc.programName,
+          startDate: doc.startDate,
+          endDate: doc.endDate
         }
       })
       console.log(response)

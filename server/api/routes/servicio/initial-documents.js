@@ -35,12 +35,11 @@ const uploadFiles = multer({
   { name: 'cartaAsignacion' }
 ])
 
-// TODO: Avoid documents duplicity.
 /** New Upload */
 router.post('/upload/:servicioId', uploadFiles, InitialDocumentsController.new)
 
 // /** Get */
-// router.get('/get/:servicioId', InitialDocumentsController.initialDocumentsGetOne)
+router.get('/get/:servicioId', InitialDocumentsController.get)
 
 // /** Get All */
 // router.get('/get-all/', InitialDocumentsController.initialDocumentsGetAll)
