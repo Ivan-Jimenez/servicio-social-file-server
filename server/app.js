@@ -15,7 +15,7 @@ mongoose.connect(`mongodb://${process.env.DATABASE_SERVER}/${process.env.DATABAS
 mongoose.Promise = global.Promise // Shuts the deprecation warning
 
 app.use(morgan('dev'))
-app.use('/files', express.static('files'))
+// app.use('/static/files', express.static('files'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 

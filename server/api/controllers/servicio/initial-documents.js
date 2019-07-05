@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const fs = require('fs')
+const path = require('path')
 
 const Servicio = require('../../models/servicio/Servicio')
 const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
@@ -29,23 +31,17 @@ exports.get = (req, res, next) => {
     })
 }
 
-exports.initialDocumentsGetAll = (req, res, next) => {
-  ServicioDocuments.find({ documents: 'Iniciales' })
-    .select('_id servicio path')
-    .exec()
-    .then(docs => {
-      const response = {
-        count: docs.length,
-        documents: docs.map(doc => {
-          return {
-            _id     : doc._id,
-            servicio: doc.servicio,
-            documents: doc.documents,
-            path    : doc.path
-          }
-        })
-      }
-      res.status(200).json(response)
+/** Get File */
+exports.getFile = (req, res, next )=> {
+  console.log(path.join(__dirname + '/../../files/servicio/testFile.pdf'))
+  ServicioDocuments
+    .find({ 
+      servicioId: req.params.servicioId, 
+      _id: req.params.fileId 
+    })
+    .then(result => {
+      console.log(result)
+      res.status(200).sendFile(path.join(__dirname + '/../../../' + result[0].path))
     })
     .catch(err => {
       console.log(err)
@@ -55,39 +51,40 @@ exports.initialDocumentsGetAll = (req, res, next) => {
     })
 }
 
-exports.initialDocumentsDeleteOne = (req, res, next) => {
+/** Delete */
+exports.delete = (req, res, next) => {
+  let filesToDelete
   ServicioDocuments
-    .remove({
-      servicio: req.params.servicioId,
-      documents: 'Iniciales'
+    .find({ servicioId: req.params.servicioId, documentType: 'Inicial' })
+    .exec()
+    .then(files => {
+      filesToDelete = files
     })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
+  ServicioDocuments
+    .deleteMany({ servicioId: req.params.servicioId, documentType: 'Inicial' })
     .exec()
     .then(result => {
       console.log(result)
+      filesToDelete.forEach(file => {
+        fs.unlink(file.path, (err) => {
+          if (err) {
+            throw err
+          }
+          console.log('File Deleted!')
+        })
+      })
       res.status(200).json({
         message: 'Documentos borrados!'
       })
     })
     .catch(err => {
       console.log(err)
-      res.status(500).json({
-        error: err
-      })
-    })
-}
-
-
-// TODO: Delete the documents
-exports.deleteOne = (req, res, next) => {
-  Servicio.remove({ _id: req.params.servicioId })
-    .exec()
-    .then(result => {
-      console.log(result)
-      res.status(200).json({
-        message: 'Servicio Social borrado!'
-      })
-    })
-    .catch(err => {
       res.status(500).json({
         error: err
       })
@@ -124,8 +121,6 @@ exports.new = (req, res, next) => {
 /*******************************************************************************
  ************************* Util Fuctions ***************************************
  ******************************************************************************/
-
- // TODO: Create a route to get the documents one by one.
 
 /**
  * 
@@ -193,7 +188,6 @@ function saveFiles (servicioId, files, res) {
         missing: err.errors
       })
     } else {
-      
       res.status(500).json({
         error: err
       })

@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
+// NOTE: Add to all routes for authentication 
 // const checkAuth = require('../../middleware/check-auth')
 
 const InitialDocumentsController = require('../../controllers/servicio/initial-documents')
@@ -38,13 +39,16 @@ const uploadFiles = multer({
 /** New Upload */
 router.post('/upload/:servicioId', uploadFiles, InitialDocumentsController.new)
 
-// /** Get */
+/** Get */
 router.get('/get/:servicioId', InitialDocumentsController.get)
 
-// /** Get All */
+/** Get All */
 // router.get('/get-all/', InitialDocumentsController.initialDocumentsGetAll)
 
-// /** Delete */
-// router.delete('/delete-one/:servicioId', InitialDocumentsController.initialDocumentsDeleteOne)
+/** Delete */
+router.delete('/delete/:servicioId', InitialDocumentsController.delete)
+
+/** Get File */
+router.get('/file/:servicioId/:fileId', InitialDocumentsController.getFile)
 
 module.exports = router
