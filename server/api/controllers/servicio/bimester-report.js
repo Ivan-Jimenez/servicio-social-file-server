@@ -3,41 +3,46 @@ const mongoose = require('mongoose')
 const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 const Servicio = require('../../models/servicio/Servicio')
 
+/** New */
 exports.new = (req, res, next) => {
-  Servicio.find({ control: req.body.control })
+  const servicioId = req.params.servicioId
+  Servicio.find({ _id: servicioId })
     .exec()
     .then(servicio => {
-      if (servicio.length < 1) {
-        return res.status(409).json({
-          error: 'El alumno no se encuentra registrado al Servicio Social.'
+      ServicioDocuments.find({ servicioId: servicioId, documentType: 'Bimester Report' })
+        .exec()
+        .then(documents => {
+          console.log(documents)
+          if (documents.length >= 1) {
+            return res.status(409).json({
+              error: 'Los documentos ya habían sido guardados anteriormente!'
+            })
+          } else {
+            saveFiles(servicio[0]._id, req.files, req.params.documentType, res)
+          }
         })
-      } else {
-        saveFiles(servicio[0]._id, req.files, req.body.documents, res)
-      }
     })
     .catch(err => {
       console.log(err)
-      return res.status(500).json({
+      res.status(500).json({
         error: err
       })
     })
 }
 
-exports.getOne = (req, res, next) => {
+/** Get One */
+exports.get = (req, res, next) => {
   ServicioDocuments
-    .find({
-      servicio: req.params.servicioId,
-      documents: req.body.documents
-    })
+    .find({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
     .exec()
     .then(docs => {
       const response = {
-        count: docs.length,
-        reportDocuments: docs.map(doc => {
+        bimesterReport: docs.map(doc => {
           return {
             _id: doc._id,
-            servicio: doc.servicio,
-            documents: doc.documents,
+            servicioId: doc.servicioId,
+            documentName: doc.documentName,
+            documentType: doc.documentType,
             path: doc.path
           }
         })
@@ -52,42 +57,56 @@ exports.getOne = (req, res, next) => {
     })
 }
 
-exports.getAll = (req, res, next) => {
-  ServicioDocuments.find()
-    .select('_id servicio path')
-    .exec()
-    .then(docs => {
-      const response = {
-        count: docs.length,
-        documents: docs.map(doc => {
-          return {
-            _Id: doc._id,
-            servicio: doc.servicio,
-            documents: doc.documents,
-            path: doc.path
-          }
-        })
-      }
-      res.status(200).json(response)
+/** Get File */
+exports.getFile = (req, res, next) => {
+  console.log(path.join(__dirname + '/../../files/servicio/testFile.pdf'))
+  ServicioDocuments
+    .find({
+      servicioId: req.params.servicioId,
+      _id: req.params.fileId
+    })
+    .then(result => {
+      console.log(result)
+      res.status(200).sendFile(path.join(__dirname + '/../../../' + result[0].path))
     })
     .catch(err => {
-      console.log(500).json({
+      console.log(err)
+      res.status(500).json({
         error: err
       })
     })
 }
 
-exports.deleteOne = (req, res, next) => {
+/** Delete */
+exports.delete = (req, res, next) => {
+  let filesToDelete
   ServicioDocuments
-    .remove({
-      servicioId: req.params.servicioId,
-      documents: req.params.documents
+    .find({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
+    .exe()
+    .then(files => {
+      filesToDelete = files
     })
-    .exec()
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
+  ServicioDocuments
+    .deleteMany({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
+    .exe()
     .then(result => {
       console.log(result)
+      filesToDelete.forEach(file => {
+        fs.unlink(file.path, (err) => {
+          if (err) {
+            throw err
+          }
+          console.log('FIle Deleted!')
+        })
+      })
       res.status(200).json({
-        message: 'Documentos borrados!'
+        message: 'Docuemntos borrados!'
       })
     })
     .catch(err => {
@@ -102,37 +121,67 @@ exports.deleteOne = (req, res, next) => {
  ****************************** Util Functions *********************************
 *******************************************************************************/
 
-function saveFiles (servicioId, files, documents, res) {
+/**
+ * @param {mongoose.ObjectId} servicioId 
+ * @param {Array} files -> The server recives the documents in the following order:
+ *  1. Reporte Bimestral
+ *  2. Evaluación Cualitativa Llenada por la Institución
+ *  3. Autoevalaución Cualitativa Llenada por el Estudiante 
+ * @param {Response} res 
+ */
+function saveFiles (servicioId, files, documentType, res) {
   ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
-      documents: documents,
+      documentName: 'Reporte Bimestral',
+      servicioId: servicioId,
+      documentType: documentType,
       path: files.reporte[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
-      documents: documents,
+      documentName: 'Evaluación Cualitativa Llenada por la Institutción',
+      servicioId: servicioId,
+      documentType: documentType,
       path: files.evaluacion[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
-      documents: documents,
+      documentName: 'Autoevaluación Culitatica Llenada por el Estudiante',
+      servicioId: servicioId,
+      documentType: documentType,
       path: files.autoevaluacion[0].path
     }
   ])
   .then(result => {
     console.log(result)
     res.status(201).json({
-      message: 'Documentos guardados!'
+      message: 'Documentos de Reporte Bimestral guardados!',
+      savedDocuements: result.map(doc => {
+        return {
+          _id: doc._id,
+          servicioId: doc.servicioId,
+          documentName: doc.documentName,
+          documentType: doc.documentType,
+          request: {
+            type: 'GET',
+            url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/bimester-report/get/${doc.servicioId}`
+          }
+        }
+      })
     })
   })
   .catch(err => {
     console.log(err)
-    res.status(500).json({
-      error: err
-    })
+    if (err.name === 'ValidationError') {
+      res.status(400).json({
+        error: 'Operación fallida. Datos incompletos!',
+        missing: err.errors
+      })
+    } else {
+      res.status(500).json({
+        error: err
+      })
+    }
   })
 }

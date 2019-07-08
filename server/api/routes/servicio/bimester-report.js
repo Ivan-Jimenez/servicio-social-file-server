@@ -7,7 +7,7 @@ const checkAuth = require('../../middleware/check-auth')
 const BimesterReportController = require('../../controllers/servicio/bimester-report')
 
 const storage = multer.diskStorage({
-  destination: function (req, res, callback) {
+  destination: (req, res, callback) => {
     callback(null, process.env.FILES_PATH)
   },
   filename(req, file, callback) {
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   }
 })
 
-const fileFilter = function (req, file, callback) {
+const fileFilter = (req, file, callback) => {
   const ext = file.originalname.lastIndexOf('.')
   const fext = (ext < 1) ? '' : file.originalname.substr(ext + 1)
   if (fext !== 'pdf') {
@@ -24,7 +24,7 @@ const fileFilter = function (req, file, callback) {
   callback(null, true)
 }
 
-const uploadFile = multer({
+const uploadFiles = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: fileFilter
@@ -34,16 +34,19 @@ const uploadFile = multer({
   { name: 'autoevaluacion' }
 ])
 
-/** New bimester two report */
-router.post('/', checkAuth, uploadFile, BimesterReportController.new)
+/** New Upload */
+router.post('/upload/:servicioId', uploadFiles, BimesterReportController.new)
 
-/** Fetch bimester documents */
-router.get('/:servicioId', checkAuth, BimesterReportController.getOne)
+/** Get */
+router.get('/get/:servicioId', BimesterReportController.get)
 
-/** Fetch all bimester documents */
-router.get('/', checkAuth, BimesterReportController.getAll)
+// /** Fetch all bimester documents */
+// router.get('/', checkAuth, BimesterReportController.getAll)
 
-/** Delete bimester documents */
-router.delete('/:servicioId', checkAuth, BimesterReportController.deleteOne)
+/** Delete */
+router.delete('/delete/:servicioId', BimesterReportController.delete)
+
+/** Get File */
+router.get('/file/:servicioId/:fileId', BimesterReportController.getFile)
 
 module.exports = router

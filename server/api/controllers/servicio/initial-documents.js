@@ -7,7 +7,8 @@ const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 
 /** Get One */
 exports.get = (req, res, next) => {
-  ServicioDocuments.find({ servicioId: req.params.servicioId, documentType: 'Inicial' })
+  ServicioDocuments
+    .find({ servicioId: req.params.servicioId, documentType: 'Inicial' })
     .exec()
     .then(docs => {
       const response = {
@@ -103,7 +104,7 @@ exports.new = (req, res, next) => {
           console.log(documents)
           if (documents.length >= 1) {
             return res.status(409).json({
-              error: 'Los documentos ya habian sido guardados con anterioridad.'
+              error: 'Los documentos ya habían sido guardados con anterioridad.'
             })
           } else {
             saveFiles(servicio[0]._id, req.files, res)
@@ -123,7 +124,6 @@ exports.new = (req, res, next) => {
  ******************************************************************************/
 
 /**
- * 
  * @param {mongoose.ObjectId} servicioId 
  * @param {Array} files -> The server recives the documents in the following order:
  *  1. Solicitud de Servicio Social
@@ -171,7 +171,7 @@ function saveFiles (servicioId, files, res) {
           _id: doc._id,
           servicioId: doc.servicioId,
           documentName: doc.documentName,
-          documentTyepe: doc.documentType,
+          documentType: doc.documentType,
           request: {
             type: 'GET',
             url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/initial-documents/get/${doc.servicioId}`
