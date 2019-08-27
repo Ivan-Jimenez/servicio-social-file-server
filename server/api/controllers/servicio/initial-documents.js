@@ -38,7 +38,8 @@ exports.getFile = (req, res, next )=> {
   ServicioDocuments
     .find({ 
       servicioId: req.params.servicioId, 
-      _id: req.params.fileId 
+      _id: req.params.fileId,
+      documentType: 'Inicial'
     })
     .then(result => {
       console.log(result)
@@ -120,7 +121,7 @@ exports.new = (req, res, next) => {
 }
 
 /*******************************************************************************
- ************************* Util Fuctions ***************************************
+ **************************Util Fuctions****************************************
  ******************************************************************************/
 
 /**

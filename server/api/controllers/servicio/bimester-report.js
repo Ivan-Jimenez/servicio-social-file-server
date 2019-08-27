@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const path = require('path')
+const fs = require('fs')
 
 const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 const Servicio = require('../../models/servicio/Servicio')
@@ -9,18 +11,25 @@ exports.new = (req, res, next) => {
   Servicio.find({ _id: servicioId })
     .exec()
     .then(servicio => {
-      ServicioDocuments.find({ servicioId: servicioId, documentType: 'Bimester Report' })
-        .exec()
-        .then(documents => {
-          console.log(documents)
-          if (documents.length >= 1) {
-            return res.status(409).json({
-              error: 'Los documentos ya habían sido guardados anteriormente!'
-            })
-          } else {
-            saveFiles(servicio[0]._id, req.files, req.params.documentType, res)
-          }
+      console.log(servicio)
+      if (servicio.length >= 1) {
+        ServicioDocuments.find({ servicioId: servicioId, documentType: req.body.documentType })
+          .exec()
+          .then(documents => {
+            console.log(documents)
+            if (documents.length >= 1) {
+              return res.status(409).json({
+                error: 'Los documentos ya habían sido guardados anteriormente!'
+              })
+            } else {
+              saveFiles(servicioId, req.files, req.body.documentType, res)
+            }
+          })
+      } else {
+        return res.status(409).json({
+          error: 'EL Servicio Social no se encuentra registrado!'
         })
+      }
     })
     .catch(err => {
       console.log(err)
@@ -30,10 +39,11 @@ exports.new = (req, res, next) => {
     })
 }
 
-/** Get One */
+/** Get all the files for a bimester report  */
 exports.get = (req, res, next) => {
+  console.log(req.body.documentType)
   ServicioDocuments
-    .find({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
+    .find({ servicioId: req.params.servicioId, documentType: req.body.documentType })
     .exec()
     .then(docs => {
       const response = {
@@ -63,7 +73,10 @@ exports.getFile = (req, res, next) => {
   ServicioDocuments
     .find({
       servicioId: req.params.servicioId,
-      _id: req.params.fileId
+      _id: req.params.fileId,
+      // NOTE: This is similar to SELECT * FROM ServicioDocuments WHERE 
+      // documentType LiKE '%Bimestre%';
+      // documentType: /.*Bimestre.*/
     })
     .then(result => {
       console.log(result)
@@ -81,8 +94,8 @@ exports.getFile = (req, res, next) => {
 exports.delete = (req, res, next) => {
   let filesToDelete
   ServicioDocuments
-    .find({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
-    .exe()
+    .find({ servicioId: req.params.servicioId, documentType: req.body.documentType })
+    .exec()
     .then(files => {
       filesToDelete = files
     })
@@ -93,8 +106,8 @@ exports.delete = (req, res, next) => {
       })
     })
   ServicioDocuments
-    .deleteMany({ servicioId: req.params.servicioId, documentType: 'Bimester Report' })
-    .exe()
+    .deleteMany({ servicioId: req.params.servicioId, documentType: req.body.documentType })
+    .exec()
     .then(result => {
       console.log(result)
       filesToDelete.forEach(file => {
@@ -102,11 +115,11 @@ exports.delete = (req, res, next) => {
           if (err) {
             throw err
           }
-          console.log('FIle Deleted!')
+          console.log('File Deleted!')
         })
       })
       res.status(200).json({
-        message: 'Docuemntos borrados!'
+        message: 'Documentos borrados!'
       })
     })
     .catch(err => {

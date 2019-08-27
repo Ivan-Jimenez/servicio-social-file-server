@@ -34,6 +34,10 @@ const uploadFiles = multer({
   { name: 'autoevaluacion' }
 ])
 
+/**
+ * NOTE: 
+ */
+
 /** New Upload */
 router.post('/upload/:servicioId', uploadFiles, BimesterReportController.new)
 
