@@ -3,24 +3,32 @@ import axios from 'axios'
 const BASE_URL = 'http://localhost:3000'
 
 const state = {
-  servicios: []
+  servicios: [],
+  files: []
 }
 
 const actions = {
   async fetchServicios ({ commit }) {
-    const response = await axios.get(`${BASE_URL}/servicio/`)
+    const response = await axios.get(`${BASE_URL}/servicio/get-all`)
     commit('setServicios', response.data.servicios)
     console.log(response.data.servicios)
   },
   async addServicio ({ commit }, servicio) {
-    const response = await axios.post(`${BASE_URL}/servicio/`, { servicio, completed: false })
+    const response = await axios.post(`${BASE_URL}/servicio/new`,
+      { servicio, completed: false })
     commit('newServicio', response.data)
+  },
+  async uploadInitialFiles ({ commit }, files) {
+    // TODO: Get the servicio id to pass it here.
+    const response = await axios.post(`${BASE_URL}/servicio/initial-documents/upload/5d66ad845d0b8c3a3021359a`, files)
+    commit('uploadInitialFiles', response.data)
   }
 }
 
 const mutations = {
   setServicios: (state, servicios) => (state.servicios = servicios),
-  newServicio: (state, servicio) => state.servicios.unshift(servicio)
+  newServicio: (state, servicio) => state.servicios.unshift(servicio),
+  uploadInitialFiles: (state, files) => (state.files.push({ 'initialFiles': files }))
 }
 
 const getters = {

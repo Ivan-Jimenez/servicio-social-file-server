@@ -14,7 +14,7 @@
     </v-card-title>
     <v-data-table
       :headers="headers"
-      :items="students"
+      :items="allServicios"
       :search="search">
       <template
         v-slot:items="props">
@@ -24,8 +24,8 @@
         <td class="text-xs-left">{{ props.item.career }}</td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.programName }}</td>
-        <td class="text-xs-left">{{ props.item.startDate }}</td>
-        <td class="text-xs-left">{{ props.item.endDate }}</td>
+        <td class="text-xs-left">{{ props.item.startDate.split('T')[0] }}</td>
+        <td class="text-xs-left">{{ props.item.endDate.split('T')[0] }}</td>
         <td class="text-xs-left">{{ props.item.status }}</td>
       </template>
       <template v-slot:no-results>
@@ -49,35 +49,22 @@ export default {
     ...mapGetters(['allServicios'])
   },
   computed: mapGetters(['allServicios']),
+  mounted () {
+    // // this.fetchServicios()
+    // for (var i = 0; i <= this.allServicios.length; ++i) {
+    //   this.students.push({
+    //     control: this.allServicios[i].control,
+    //     career: this.allServicios[i].career,
+    //     name: this.allServicios[i].name,
+    //     lastName: this.allServicios[i].lastName,
+    //     programName: this.allServicios[i].programName,
+    //     startDate: this.allServicios[i].startDate,
+    //     endDate: this.allServicios[i].endDate
+    //   })
+    // }
+  },
   created () {
     this.fetchServicios()
-    // console.log(this.allServicios())
-    // this.allServicios[0].servicios.forEach(servico => {
-    //   this.students.push({
-    //     control: servicio.control,
-    //     career: servicio.career,
-    //     name: `${servicio.name} ${servicio.lastName}`,
-    //     programName: servicio.programName,
-    //     startDate: servicio.startDate.split('T')[0],
-    //     endDate: servicio.endDate.split('T')[0]
-    //   })
-    // })
-    // try {
-    //   const response = await AuthenticationService.servicioFetchAll()
-    //   console.log(response.data.servicios)
-    //   response.data.servicios.forEach(servicio => {
-    //     this.students.push({
-    //       control: servicio.control,
-    //       career: servicio.career,
-    //       name: `${servicio.name} ${servicio.lastName}`,
-    //       programName: servicio.programName,
-    //       startDate: servicio.startDate.split('T')[0],
-    //       endDate: servicio.endDate.split('T')[0]
-    //     })
-    //   })
-    // } catch (err) {
-    //   console.log(err.response.data.error)
-    // }
   },
   data () {
     return {

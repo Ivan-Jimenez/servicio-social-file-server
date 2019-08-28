@@ -4,9 +4,9 @@ const Servicio = require('../../models/servicio/Servicio')
 
 /** New */
 exports.new = (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body.servicio)
   const servicioId = new mongoose.Types.ObjectId()
-  Servicio.find({ control: req.body.control })
+  Servicio.find({ control: req.body.servicio.control })
     .exec()
     .then(servicio => {
       if (servicio.length >= 1) {
@@ -16,14 +16,14 @@ exports.new = (req, res, next) => {
       }
       const newServicio = new Servicio({
         _id: servicioId,
-        supervisor: req.body.supervisor,
-        control : req.body.control,
-        career : req.body.career,
-        name : req.body.name,
-        lastName : req.body.lastName,
-        programName: req.body.programName,
-        startDate: req.body.startDate,
-        endDate : req.body.endDate
+        supervisor: req.body.servicio.supervisor,
+        control : req.body.servicio.control,
+        career : req.body.servicio.career,
+        name : req.body.servicio.name,
+        lastName : req.body.servicio.lastName,
+        programName: req.body.servicio.programName,
+        startDate: req.body.servicio.startDate,
+        endDate : req.body.servicio.endDate
       })
       newServicio.save()
         .then(result => {
@@ -51,7 +51,7 @@ exports.new = (req, res, next) => {
           if (err.name === 'ValidationError') {
             res.status(400).json({
               error: 'Operación fallida. Datos incompletos!',
-              missing: err.errors
+              // missing: err.errors
             })
           } else {
             res.status(500).json({
@@ -63,7 +63,7 @@ exports.new = (req, res, next) => {
     .catch(err => {
       console.log(err)
       res.status(500).json({
-        error: err
+        // error: err
       })
     })
 }
@@ -115,6 +115,7 @@ exports.getAll = (req, res, next) => {
     `)
     .exec()
     .then(docs => {
+      console.log(docs)
       const response = {
         count: docs.length,
         servicios: docs.map(doc => {

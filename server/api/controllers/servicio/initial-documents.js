@@ -95,6 +95,8 @@ exports.delete = (req, res, next) => {
 
 /** New */
 exports.new = (req, res, next) => {
+  console.log(req.files)
+  console.log(req.params.servicioId)
   const servicioId = req.params.servicioId
   Servicio.find({ _id: servicioId })
     .exec()

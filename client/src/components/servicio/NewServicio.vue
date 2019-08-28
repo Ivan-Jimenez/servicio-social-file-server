@@ -19,7 +19,6 @@
           <div class="pl-4 pr-4 pt-2 pb-2">
             <v-form
               ref="form"
-              v-model="valid"
               lazy-validation>
               <v-container>
                 <v-layout>
@@ -90,7 +89,6 @@
                           v-on="on"/>
                       </template>
                       <v-date-picker
-                        v-model="startDate"
                         no-title
                         scrollable>
                         <v-spacer/>
@@ -131,7 +129,6 @@
                           v-on="on"/>
                       </template>
                       <v-date-picker
-                        v-model="endDate"
                         no-title
                         scrollable>
                         <v-spacer/>
@@ -293,39 +290,28 @@ export default {
   },
   methods: {
     ...mapActions(['addServicio']),
+    ...mapActions(['uploadInitialFiles']),
     submitFiles () {
-      if (!this.validate()) {
-        this.error = 'Proporcione la información solicitada!'
-      }
+      // if (!this.validate()) {
+      //   this.error = 'Proporcione la información solicitada!'
+      // }
+      // this.addServicio({
+      //   'supervisor': '5d01d3afb9a84804206bdbd0', // Get this from the logged user.
+      //   'control': this.control,
+      //   'career': this.career,
+      //   'name': this.name,
+      //   'lastName': this.lastName,
+      //   'programName': this.programName,
+      //   'startDate': this.startDate,
+      //   'endDate': this.endDate
+      // })
       const formData = new FormData()
-      // Fields
-      formData.append('control', this.control)
-      formData.append('career', this.career)
-      formData.append('name', this.name)
-      formData.append('lastName', this.lastName)
-      formData.append('programName', this.programName)
-      formData.append('startDate', this.startDate)
-      formData.append('endDate', this.endDate)
       // Files
       formData.append('solicitud', this.FILE[0])
       formData.append('planTrabajo', this.FILE[this.fileIndex.planTrabajo])
       formData.append('cartaCompromiso', this.FILE[this.fileIndex.cartaCompromiso])
       formData.append('cartaAsignacion', this.FILE[this.fileIndex.cartaAsignacion])
-      this.addServicio(this.formData)
-      // try {
-      //   const response = await AuthenticationService.servicio(
-      //     formData,
-      //     {
-      //       headers: {
-      //         'Content-Type': 'multipart/form-data'
-      //       }
-      //     }
-      //   )
-      //   this.$router.push('/home')
-      //   console.log(response.data.message)
-      // } catch (err) {
-      //   this.error = err.response.data.error
-      // }
+      this.uploadInitialFiles(formData)
     },
     // TODO: Find a better way to manage the file pick.
     onSolicitudFilePicked (e) {

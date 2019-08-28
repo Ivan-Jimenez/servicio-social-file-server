@@ -9,7 +9,7 @@
       </span>
     </v-toolbar-title>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-btn to="/home" flat>
+      <v-btn to="/" flat>
         <v-icon left>home</v-icon>
         Home</v-btn>
       <v-menu offset-y>
