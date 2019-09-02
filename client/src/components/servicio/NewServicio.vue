@@ -18,6 +18,7 @@
           </v-toolbar>
           <div class="pl-4 pr-4 pt-2 pb-2">
             <v-form
+              v-model="valid"
               ref="form"
               lazy-validation>
               <v-container>
@@ -295,16 +296,20 @@ export default {
       // if (!this.validate()) {
       //   this.error = 'Proporcione la información solicitada!'
       // }
-      // this.addServicio({
-      //   'supervisor': '5d01d3afb9a84804206bdbd0', // Get this from the logged user.
-      //   'control': this.control,
-      //   'career': this.career,
-      //   'name': this.name,
-      //   'lastName': this.lastName,
-      //   'programName': this.programName,
-      //   'startDate': this.startDate,
-      //   'endDate': this.endDate
-      // })
+      this.validate()
+
+      this.addServicio({
+        control: this.control,
+        // Get this from the user login
+        supervisor: '5d01d3afb9a84804206bdbd2',
+        career: this.career,
+        name: this.name,
+        lastName: this.lastName,
+        programName: this.programName,
+        startDate: this.startDate,
+        endDate: this.endDate
+      })
+
       const formData = new FormData()
       // Files
       formData.append('solicitud', this.FILE[0])

@@ -64,7 +64,8 @@ export default {
     // }
   },
   created () {
-    this.fetchServicios()
+    var response = this.fetchServicios()
+    console.log(response)
   },
   data () {
     return {

@@ -1,47 +1,43 @@
 const mongoose = require('mongoose')
 
-const Servicio = require('../../models/servicio/Servicio')
+const Residencia = require('../../models/residencias/Residencia')
 
 /** New */
 exports.new = (req, res, next) => {
-  console.log(req.body.servicio)
-  const servicioId = new mongoose.Types.ObjectId()
+  console.log(req.body.residencia)
+  const residenciaId = new mongoose.Types.ObjectId()
   Servicio.find({ control: req.body.control })
     .exec()
-    .then(servicio => {
-      if (servicio.length >= 1) {
+    .then(residencia => {
+      if (residencia.length >= 1) {
         return res.status(409).json({
-          error: 'El alumno ya se encuentra registrado al Servicio Social!'
+          error: 'El alumno ya se encuentra registrado en residencias!'
         })
       }
-      const newServicio = new Servicio({
-        _id: servicioId,
+      const newResidencia = new Residencia({
+        _id: residenciaId,
         supervisor: req.body.supervisor,
         control : req.body.control,
         career : req.body.career,
         name : req.body.name,
         lastName : req.body.lastName,
-        programName: req.body.programName,
-        startDate: req.body.startDate,
-        endDate : req.body.endDate
+        programName: req.body.programName
       })
-      newServicio.save()
+      newResidencia.save()
         .then(result => {
           console.log(result)
           res.status(200).json({
-            message: 'Servicio Social registrado!',
-            createdServicio: {
+            message: 'Residencia registrada!',
+            createdResidencia: {
               _id: result._id,
               control : result.control,
               career : result.career,
               name : result.name,
               lastName : result.lastName,
               programName: result.programName,
-              startDate: result.startDate,
-              endDate : result.endDate,
               request: {
                 type: 'GET',
-                url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/get-one/${result._id}`
+                url: `http://${process.env.SERVER}:${process.env.PORT}/residencias/get-one/${result._id}`
               }
             }
           })
@@ -71,23 +67,21 @@ exports.new = (req, res, next) => {
 // TODO: Delete the documents from db and disk.
 /** Delete */
 exports.deleteOne = (req, res, next) => {
-  Servicio.remove({ _id: req.params.servicioId })
+  Residencia.remove({ _id: req.params.residenciaId })
     .exec()
     .then(result => {
       console.log(result)
       res.status(200).json({
-        message: 'Servicio Social borrado!',
+        message: 'Residencia borrada!',
         request: {
           type: 'POST',
-          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/new/`,
+          url: `http://${process.env.SERVER}:${process.env.PORT}/residencias/new/`,
           body: {
             control: 'Number',
             career: 'String',
             name: 'String',
             lastName: 'String',
-            programName: 'String',
-            startDate: 'Date',
-            endDate: 'Date'
+            programName: 'String'
           }
         }
       })
@@ -101,7 +95,7 @@ exports.deleteOne = (req, res, next) => {
 
 /** Get All */
 exports.getAll = (req, res, next) => {
-  Servicio.find()
+  Residencia.find()
     .select(`
       _id
       supervisor
@@ -110,15 +104,13 @@ exports.getAll = (req, res, next) => {
       name
       lastName
       programName
-      startDate
-      endDate
     `)
     .exec()
     .then(docs => {
       console.log(docs)
       const response = {
         count: docs.length,
-        servicios: docs.map(doc => {
+        residencias: docs.map(doc => {
           return {
             _id : doc._id,
             supervisor: doc.supervisor,
@@ -127,11 +119,9 @@ exports.getAll = (req, res, next) => {
             name : doc.name,
             lastName : doc.lastName,
             programName: doc.programName,
-            startDate: doc.startDate,
-            endDate : doc.endDate,
             request : {
               type: 'GET',
-              url : `http://${process.env.SERVER}:${process.env.PORT}/servicio/get-one/${doc._id}`
+              url : `http://${process.env.SERVER}:${process.env.PORT}/residencias/get-one/${doc._id}`
             }
           }
         })
@@ -149,20 +139,20 @@ exports.getAll = (req, res, next) => {
 /** Update */
 exports.update = (req, res, next) => {
   console.log(req.body)
-  const id = req.params.servicioId
+  const id = req.params.residenciaId
   const updateOps = {}
   Object.getOwnPropertyNames(req.body).forEach(prop => {
     updateOps[prop] = req.body[prop]
   })
   console.log(updateOps)
-  Servicio.updateOne({ _id: id }, { $set: updateOps })
+  Residencia.updateOne({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
       res.status(200).json({
-        message: 'Servicio Social actualizado!',
+        message: 'Residencia actualizada!',
         request: {
           type: 'GET',
-          url: `http://${process.env.SERVER}:${process.env.PORT}/servicio/update/${id}`
+          url: `http://${process.env.SERVER}:${process.env.PORT}/residencias/update/${id}`
         }
       })
     })
@@ -170,7 +160,7 @@ exports.update = (req, res, next) => {
 
 /** Get One */
 exports.getOne = (req, res, next) => {
-  Servicio.find({ _id: req.params.servicioId })
+  Residencia.find({ _id: req.params.residenciaId })
     .exec()
     .then(docs => {
       const response = docs.map(doc => {
@@ -181,9 +171,7 @@ exports.getOne = (req, res, next) => {
           career: doc.career,
           name: doc.name,
           lastName: doc.lastName,
-          programName: doc.programName,
-          startDate: doc.startDate,
-          endDate: doc.endDate
+          programName: doc.programName
         }
       })
       console.log(response)

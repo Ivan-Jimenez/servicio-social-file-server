@@ -11,11 +11,12 @@ const actions = {
   async fetchServicios ({ commit }) {
     const response = await axios.get(`${BASE_URL}/servicio/get-all`)
     commit('setServicios', response.data.servicios)
-    console.log(response.data.servicios)
+    // console.log(response.data.servicios)
+    return response
   },
   async addServicio ({ commit }, servicio) {
-    const response = await axios.post(`${BASE_URL}/servicio/new`,
-      { servicio, completed: false })
+    const response = await axios.post(`${BASE_URL}/servicio/new`, { servicio, completed: false })
+    console.log(response.data)
     commit('newServicio', response.data)
   },
   async uploadInitialFiles ({ commit }, files) {

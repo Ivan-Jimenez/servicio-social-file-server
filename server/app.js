@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 // Routes
 const userRoutes = require('./api/routes/user')
 const servicioRoutes = require('./api/routes/servicio/')
+const residenciasRoutes = require('./api/routes/residencias')
 // NOTE: There's no need of this
 // const ReporteRoutes = require('./api/routes/servicio/bimester-report')
 // const FinalRoutes = require('./api/routes/servicio/final-documents')
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 
 app.use('/user', userRoutes)
 app.use('/servicio', servicioRoutes)
+app.use('/residencias', residenciasRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Nice try bitch!!')

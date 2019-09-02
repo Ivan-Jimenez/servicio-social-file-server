@@ -1,18 +1,18 @@
 const mongoose = require('mongoose')
 
-const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
-const Servicio = require('../../models/servicio/Servicio')
+const ResidenciaDocuments = require('../../models/residencias/ResidenciaDocuments')
+const Residencia = require('../../models/residencias/Residencia')
 
 exports.new = (req, res, next) => {
-  Servicio.find({ control: req.body.control })
+  Residencia.find({ control: req.body.control })
     .exec()
-    .then(servicio => {
-      if (servicio.length < 1) {
+    .then(residencia => {
+      if (residencia.length < 1) {
         return res.status(409).json({
-          error: 'El alumno no se encuentra registrado al Servicio Social.'
+          error: 'El alumno no se encuentra registrado en residencias.'
         })
       } else {
-        saveFiles(servicio[0]._id, req.files, req.body.documents, res)
+        saveFiles(residencia[0]._id, req.files, req.body.documents, res)
       }
     })
     .catch(err => {
@@ -24,9 +24,9 @@ exports.new = (req, res, next) => {
 }
 
 exports.getOne = (req, res, next) => {
-  ServicioDocuments
+  ResidenciaDocuments
     .find({
-      servicio: req.params.servicioId,
+      residencia: req.params.residenciaId,
       documents: documents
     })
     .exec()
@@ -36,7 +36,7 @@ exports.getOne = (req, res, next) => {
         finalDocuments: docs.map(doc => {
           return {
             _id: doc._id,
-            servicio: doc.servicio,
+            residencia: doc.residencia,
             documents: doc.documents,
             path: doc.path
           }
@@ -53,7 +53,7 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
-  ServicioDocuments.find()
+  ResidenciaDocuments.find()
     .select('_id servicio path')
     .exec()
     .then(docs => {
@@ -62,7 +62,7 @@ exports.getAll = (req, res, next) => {
         documents: doc.map(doc => {
           return {
             _id: doc._id,
-            servicio: doc.servicio,
+            residencia: doc.residencia,
             documents: doc.documents,
             path: doc.path
           }
@@ -72,9 +72,9 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.deleteOne = (req, res, next) => {
-  ServicioDocuments
+  ResidenciaDocuments
     .remove({
-      servicioId: req.params.servicioId,
+      residenciaId: req.params.residenciaId,
       documents: 'Final'
     })
     .exec()
@@ -96,53 +96,55 @@ exports.deleteOne = (req, res, next) => {
  ****************************** Util Functions *********************************
 *******************************************************************************/
 
-function saveFiles (servicioId, files, documents, res) {
+// TODO: Replace documents name
+
+function saveFiles (residenciaId, files, documents, res) {
   ServicioDocuments.insertMany([
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.evaluacion[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.evaluacionFinal[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.autoevaluacion[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.autoevaluacionFinal[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.reporte[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.reporteFinal[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.evaluacionActividades[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
-      servicio: servicioId,
+      servicio: residenciaId,
       documents: documents,
       path: files.cartaTerminacion[0].path
     }
