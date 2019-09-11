@@ -10,7 +10,7 @@ router.get('/get-all', ResidenciaController.getAll)
 router.get('/get-one/:residenciaId', ResidenciaController.getOne)
 
 /** Delete */
-router.delete('/delete/:residenciaId', ResidenciaController.delete)
+router.delete('/delete/:residenciaId', ResidenciaController.deleteOne)
 
 /** New */
 router.post('/new', ResidenciaController.new)

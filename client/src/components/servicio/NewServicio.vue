@@ -91,6 +91,7 @@
                       </template>
                       <v-date-picker
                         no-title
+                        v-model="startDate"
                         scrollable>
                         <v-spacer/>
                         <v-btn
@@ -130,6 +131,7 @@
                           v-on="on"/>
                       </template>
                       <v-date-picker
+                        v-model="endDate"
                         no-title
                         scrollable>
                         <v-spacer/>
@@ -297,10 +299,10 @@ export default {
       //   this.error = 'Proporcione la información solicitada!'
       // }
       this.validate()
-
+      let servicioId
       this.addServicio({
         control: this.control,
-        // Get this from the user login
+        // TODO: Get this from the user login
         supervisor: '5d01d3afb9a84804206bdbd2',
         career: this.career,
         name: this.name,
@@ -309,6 +311,15 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate
       })
+        .then(result => {
+          console.log(result)
+          servicioId = result.data.createdServicio._id
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+      console.log(servicioId)
 
       const formData = new FormData()
       // Files
@@ -316,7 +327,9 @@ export default {
       formData.append('planTrabajo', this.FILE[this.fileIndex.planTrabajo])
       formData.append('cartaCompromiso', this.FILE[this.fileIndex.cartaCompromiso])
       formData.append('cartaAsignacion', this.FILE[this.fileIndex.cartaAsignacion])
-      this.uploadInitialFiles(formData)
+      formData.append('servicioId', servicioId)
+
+      this.uploadInitialFiles(formData, servicioId)
     },
     // TODO: Find a better way to manage the file pick.
     onSolicitudFilePicked (e) {

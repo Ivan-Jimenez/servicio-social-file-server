@@ -15,13 +15,13 @@ const actions = {
     return response
   },
   async addServicio ({ commit }, servicio) {
-    const response = await axios.post(`${BASE_URL}/servicio/new`, { servicio, completed: false })
-    console.log(response.data)
+    const response = await axios.post(`${BASE_URL}/servicio/new`, servicio)
     commit('newServicio', response.data)
+    return response
   },
   async uploadInitialFiles ({ commit }, files) {
     // TODO: Get the servicio id to pass it here.
-    const response = await axios.post(`${BASE_URL}/servicio/initial-documents/upload/5d66ad845d0b8c3a3021359a`, files)
+    const response = await axios.post(`${BASE_URL}/servicio/initial-documents/upload`, files)
     commit('uploadInitialFiles', response.data)
   }
 }

@@ -4,7 +4,7 @@ const Servicio = require('../../models/servicio/Servicio')
 
 /** New */
 exports.new = (req, res, next) => {
-  console.log(req.body.servicio)
+  console.log(req.body)
   const servicioId = new mongoose.Types.ObjectId()
   Servicio.find({ control: req.body.control })
     .exec()

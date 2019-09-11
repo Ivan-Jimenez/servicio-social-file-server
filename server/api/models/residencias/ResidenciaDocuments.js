@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const ResidenciaDocumentsSchema = mongoose.Schema({
-  _id: mongoose.Types.ObjectId,
+  _id: mongoose.Schema.Types.ObjectId,
   documentName: {
     type: String,
     required: true
@@ -18,4 +18,4 @@ const ResidenciaDocumentsSchema = mongoose.Schema({
   }
 })
 
-module.exports = mongoose.Schema('ResidenciaDocuments', ResidenciaDocumentsSchema)
+module.exports = mongoose.model('ResidenciaDocuments', ResidenciaDocumentsSchema)

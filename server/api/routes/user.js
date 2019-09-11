@@ -121,7 +121,7 @@ router.delete('/:userId', (req, res, next) => {
     })
 })
 
-// TODO: This is for testing. Dont forget delete it later.
+// TODO: This is for testing. Don't forget to delete it later.
 // Fetchs all the users form the database.
 router.get('/', (req, res, next) => {
   User.find()

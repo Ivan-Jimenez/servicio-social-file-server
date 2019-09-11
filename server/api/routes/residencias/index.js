@@ -1,7 +1,7 @@
 const express = require('express')
-const router = require('router')
+const router = express.Router()
 
-const residenciasRouter = require('./residencias')
+const residenciasRouter = require('./residencia')
 const initialDocumentsRouter = require('./initial-documents')
 const reportRouter = require('./report')
 

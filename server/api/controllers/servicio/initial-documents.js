@@ -5,7 +5,9 @@ const path = require('path')
 const Servicio = require('../../models/servicio/Servicio')
 const ServicioDocuments = require('../../models/servicio/ServicioDocuments')
 
-/** Get One */
+/** 
+ * Get one
+ */
 exports.get = (req, res, next) => {
   ServicioDocuments
     .find({ servicioId: req.params.servicioId, documentType: 'Inicial' })
@@ -97,7 +99,7 @@ exports.delete = (req, res, next) => {
 exports.new = (req, res, next) => {
   console.log(req.files)
   console.log(req.params.servicioId)
-  const servicioId = req.params.servicioId
+  const servicioId = req.body.servicioId
   Servicio.find({ _id: servicioId })
     .exec()
     .then(servicio => {
@@ -127,13 +129,15 @@ exports.new = (req, res, next) => {
  ******************************************************************************/
 
 /**
- * @param {mongoose.ObjectId} servicioId 
- * @param {Array} files -> The server recives the documents in the following order:
+ * The files are expected in the following order:
  *  1. Solicitud de Servicio Social
  *  2. Plan de trabajo
  *  3. Carta Compromiso
  *  4. Carta Asignación
- * @param {Response} res 
+ *
+ * @param {mongoose.Types.ObjectId} servicioId
+ * @param {Array} files
+ * @param {Response} res
  */
 function saveFiles (servicioId, files, res) {
   ServicioDocuments.insertMany([

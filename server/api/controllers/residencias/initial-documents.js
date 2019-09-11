@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
 
-const Residencia = require('../../models/residencias/Servicio')
+const Residencia = require('../../models/residencias/Residencia')
 const ResidenciaDocuments = require('../../models/residencias/ResidenciaDocuments')
 
 /** Get One */
@@ -142,28 +142,28 @@ function saveFiles (residenciaId, files, res) {
     {
       _id: new mongoose.Types.ObjectId(),
       documentName: 'Solicitud de Servicio Social',
-      residenciaId: servicioId,
+      residenciaId: residenciaId,
       documentType: 'Inicial',
       path: files.solicitud[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       documentName: 'Plan de Trabajo',
-      residenciaId: servicioId,
+      residenciaId: residenciaId,
       documentType: 'Inicial',
       path: files.planTrabajo[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       documentName: 'Carta Compromiso',
-      residenciaId: servicioId,
+      residenciaId: residenciaId,
       documentType: 'Inicial',
       path: files.cartaCompromiso[0].path
     },
     {
       _id: new mongoose.Types.ObjectId(),
       documentName: 'Carta Asignación',
-      residenciaId: servicioId,
+      residenciaId: residenciaId,
       documentType: 'Inicial',
       path: files.cartaAsignacion[0].path
     }
@@ -179,7 +179,7 @@ function saveFiles (residenciaId, files, res) {
           documentType: doc.documentType,
           request: {
             type: 'GET',
-            url: `http://${process.env.SERVER}:${process.env.PORT}/residencias/initial-documents/get/${doc.servicioId}`
+            url: `http://${process.env.SERVER}:${process.env.PORT}/residencias/initial-documents/get/${doc.residenciaId}`
           }
         }
       })
