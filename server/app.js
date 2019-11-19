@@ -41,7 +41,7 @@ app.use('/servicio', servicioRoutes)
 app.use('/residencias', residenciasRoutes)
 
 app.use((req, res, next) => {
-  const error = new Error('Nice try bitch!!')
+  const error = new Error('route don't found!!')
   error.status = 404
   next(error)
 })
